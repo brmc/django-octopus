@@ -1,0 +1,10 @@
+.idea/
+build/
+dist/
+*.egg-info/
+*.pyc
+CACHE/
+migrations/
+.pypirc
+.tox/
+__pycache__/
