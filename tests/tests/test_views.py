@@ -13,7 +13,7 @@ class ViewsTest(TestCase):
 
         response = self.client.post('/detail/%d' % m.id,  {},
             HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        self.assertTrue("fragment" in response.content)
+        self.assertEqual("fragment", response.content)
 
     def test_full_DetailView(self):
         m = TestModel()
@@ -29,7 +29,7 @@ class ViewsTest(TestCase):
             {},
             HTTP_X_REQUESTED_WITH="XMLHttpRequest")
 
-        self.assertTrue("fragment" in response.content)
+        self.assertEqual("fragment", response.content)
 
     def test_full_ListView(self):
         response = self.factory.post(
