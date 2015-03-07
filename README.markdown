@@ -1,5 +1,3 @@
-**edit:  Things are working, but I still need to finish the readme.**
-
 # **django-octopus** #
 
 Octopus is a lightweight AJAX pull framework for django, allowing
@@ -26,7 +24,7 @@ pages to be loaded or refreshed modularly.
 
 ## Quick start ##
 
-1\. `pip install git+git://github.com/brmc/django-octopus.git`
+1\. `pip install django-octopus`
 
 2\. `settings.py`
 
@@ -39,9 +37,9 @@ You may need to restart your development server to detect the template tags.
 
 3\. Add javascript:
 
-    \<script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript">
-    \</script>
-    \<script src="{% static 'octopus/both.js' %}" type="text/javascript">\</script>
+    <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript">
+    </script>
+    <script src="{% static 'octopus/both.js' %}" type="text/javascript">\</script>
 
 4\. Define your views:
 
