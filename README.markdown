@@ -32,14 +32,15 @@ pages to be loaded or refreshed modularly.
         ...
         'octopus',
         ...
-   )
+    )
+    
 You may need to restart your development server to detect the template tags.  
 
 3\. Add javascript:
 
     <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript">
     </script>
-    <script src="{% static 'octopus/both.js' %}" type="text/javascript">\</script>
+    <script src="{% static 'octopus/both.js' %}" type="text/javascript"></script>
 
 4\. Define your views:
 
@@ -59,7 +60,7 @@ where `template_name` is the name of a fully rendered template and
 `fragment_name` is a stripped down template.  It's recommended to simply
 import `fragment_name` into `template_name`.
 
-See [Usage](#views) for more detail information on using generic views or on  
+See [Usage](#views) for more detail information on using generic views or on 
 writing your own functional views.
 
 5\. Create your links.  Manually, :
@@ -72,10 +73,11 @@ or or with a template tag
 
     {% a 'Link Text' '#container' 'detail' object.id action="replace" method="get" title="New title %}
 
+See [Usage](#template-tags) for details on what these parameters mean and other 
+parameters and their default values.
+
 6\. Putting it all together, a template might look like [this](#creating-templates)
 
-
-See [Usage](#template-tags) for details on optional and default parameters.
 
 ## Changelog (Recent Changes)
 
@@ -83,7 +85,7 @@ See [Usage](#template-tags) for details on optional and default parameters.
 
 #### Features
 
-* New generic class-based views that correspond to DetailView, ListView,  
+* New generic class-based views that correspond to DetailView, ListView, 
  ArchiveIndexView, DayArchiveView, TodayArchiveView, DateDetailView, 
  WeekArchiveView, MonthArchiveView, and YearArchiveView
  
@@ -164,7 +166,7 @@ There's just two steps:
 
 #### Creating Class-Based Views ####
 
-Generic views have been created for the detail, list, and time-based views  
+Generic views have been created for the detail, list, and time-based views 
 following the naming convention of Octopus<OriginalViewName>.  If that doesn't 
 make sense, here's an explicit list of the available views with their 
 respective counter parts:
@@ -250,31 +252,32 @@ Link text, target element, url name, url arguments, kwargs.
 returned from the ajax request. E.g., `main`, `#container`, `.container`
 
 * **URL name**: the name of the url as defined in your urlconfs to be 
-passed to reverse().  If settings.OCTOPUS_ALLOW_MANUAL is set to True, you may 
+passed to reverse(). If settings.OCTOPUS_ALLOW_MANUAL is set to True, you may 
 pass a hard-coded url.
 
-* **URL arguments** are as many parameters you wish/need to pass to reverse
+* **URL arguments**: as many parameters you wish/need to pass to reverse
  
 * **Kwargs**:
-    * **method**: the HTTP Method with which you wish to make the ajax request. 
+    * **method**: the HTTP Method with which you wish to make the ajax request.  
     **Default** `get`
     
-    * **action**: `replace`, `prepend`, `append`  
-    **Default** `replace`
+    * **action**: how the incoming text will be inserted  
+      **values**: `replace`, `prepend`, `append`   
+      **Default** `replace`
     
-    * **classes**: a string of class names.  **pass the names, rather than the 
-    selectors**: i.e., "class1, class2" rather than ".class1, .class2" 
-    **Default**: None
+    * **classes**: a string of class names.  
+      **pass the names, rather than the selectors**: i.e., "class1, class2" rather than ".class1, .class2"   
+      **Default**: None
     
-    * **id**: like above but for the Id.
-    **Default**: None
+    * **id**: like above but for the Id.  
+      **Default**: None
 
-    * **title**: Text for the <title> node.
+    * **title**: Text for the `<title>` node.  
     **Default**: None
  
-### Manually Create Links
+### Manually Creating Links
 
-The template tag only creates standard inline text links.  If you want to  
+The template tag only creates standard inline text links. If you want to 
 create a link on an image or need some extra data attributes, you will have to 
 build the links yourself.
 
