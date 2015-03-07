@@ -1,3 +1,5 @@
+**edit:  I guess I should point out that this repo doesn't do anything yet.  I started with the readme and tests, so yea, if you're expecting to get anywhere with the QuickStart, then you're going to be a bit disappointed. sorry.**
+
 # **django-octopus** #
 
 Octopus is/will be a lightweight AJAX pull framework for django, allowing
