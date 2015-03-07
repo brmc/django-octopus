@@ -47,8 +47,7 @@ $(function(){
 
             switch(action){
                 case 'prepend':
-                    //var elem = $(document.createElement('div')).html(data).hide();
-                    $(data).hide();
+                    var elem = $(document.createElement('div')).html(data).hide();
                     $(obj.target).prepend(data);
                     $(elem).slideDown();
                     break;

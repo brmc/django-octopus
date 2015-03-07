@@ -17,12 +17,12 @@ class ViewsTest(TestCase):
 
         response = self.client.get('/detail/%d' % self.m.id,  {},
             HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        self.assertEqual(b"fragment", response.content)
+        self.assertTrue("fragment.html" in response.template_name)
 
     def test_full_DetailView(self):
         response = self.client.get('/detail/%d' % self.m.id)
 
-        self.assertEqual(b"full", response.content)
+        self.assertTrue("full.html" in response.template_name)
 
     def test_ajax_ListView(self):
         response = self.client.get(
@@ -30,12 +30,12 @@ class ViewsTest(TestCase):
             {},
             HTTP_X_REQUESTED_WITH="XMLHttpRequest")
 
-        self.assertEqual(b"list fragment", response.content)
+        self.assertTrue("fragment_list.html" in response.template_name)
 
     def test_full_ListView(self):
         response = self.client.get('/list/')
 
-        self.assertTrue(b"full" in response.content)
+        self.assertTrue("full.html" in response.template_name)
 
     def test_ajax_SuffixView(self):
         response = self.client.get('/suffix/%d' % self.m.id,  {},

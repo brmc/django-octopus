@@ -46,7 +46,7 @@ def a(text, target, url_name, *url_args, **kwargs):
     # be easier to use and feel more natural.
     method, action, classes, id_, title = \
         map(kwargs.get, ['method', 'action', 'classes', 'id', 'title'],
-                        ['get',    'replace'])
+                        ['get',    'replace', None,     None,  None, ])
 
     if action.lower() not in ['replace', 'append', 'prepend']:
         raise ImproperlyConfigured("%s is not a valid value for action. It "
