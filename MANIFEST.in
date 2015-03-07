@@ -1,3 +1,5 @@
 include README.markdown
 include LICENSE
+include tox.ini
+include .travis.yml
 recursive-include octopus  *.py *.html *.css *.js
