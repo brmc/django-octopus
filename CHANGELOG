@@ -2,3 +2,12 @@
 
 ## v0.1
 
+### Features
+
+* New generic class-based views that correspond to DetailView, ListView,
+ ArchiveIndexView, DayArchiveView, TodayArchiveView, DateDetailView,
+ WeekArchiveView, MonthArchiveView, and YearArchiveView
+
+* A mixin(AjaxResponseMixin) to be used on pre-existing CBVs
+
+* A template tag to generate octopus-compatible links

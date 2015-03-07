@@ -37,10 +37,11 @@ pages to be loaded or refreshed modularly.
    )
 You may need to restart your development server to detect the template tags.  
 
-3\. Templates
-    <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript">
-    </script>
-    <script src="{% static 'octopus/both.js' %}" type="text/javascript"></script>
+3\. Add javascript:
+
+    \<script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript">
+    \</script>
+    \<script src="{% static 'octopus/both.js' %}" type="text/javascript">\</script>
 
 4\. Define your views:
 
@@ -71,7 +72,7 @@ writing your own functional views.
 
 or or with a template tag
 
-   {% a 'Link Text' '#container' 'detail' object.id action="replace" method="get" title="New title %}
+    {% a 'Link Text' '#container' 'detail' object.id action="replace" method="get" title="New title %}
 
 6\. Putting it all together, a template might look like [this](#creating-templates)
 

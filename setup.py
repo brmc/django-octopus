@@ -17,7 +17,6 @@ setup(
     include_package_data=True,
     requires = ['python (>= 2.7)', 'django (>= 1.6)'],
     description  = 'A simple pull framework for django',
-    long_description = description,
     author       = 'Brian McClure',
     author_email = 'brian.mcclr@gmail.com',
     url          = 'https://github.com/brmc/django-octopus',
