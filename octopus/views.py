@@ -1,33 +1,36 @@
-from django.core.exceptions import ImproperlyConfigured
-from django.views.generic.detail import DetailView, \
-    SingleObjectTemplateResponseMixin
+from django.views.generic.dates import DateDetailView, YearArchiveView, \
+    ArchiveIndexView, DayArchiveView, WeekArchiveView, MonthArchiveView, \
+    TodayArchiveView
+from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.base import TemplateResponseMixin
 
 
-class AjaxDetailResponseMixin(SingleObjectTemplateResponseMixin):
+class AjaxResponseMixin(object):
     fragment_name = None
+    fragment_suffix = '_fragment'
+
     def get_template_names(self):
-        """
-        Returns a list of template names to be used for the request. Must return
-        a list. May not be called if render_to_response is overridden.
-        """
+        if self.request.is_ajax():
+            if self.fragment_name is not None:
+                self.template_name = self.fragment_name
+            self.template_name_suffix += self.fragment_suffix
 
-        template = self.fragment_name if self.request.is_ajax() \
-            else self.template_name
+        if hasattr(self.parent, "get_template_names"):
+            return super(self.parent, self).get_template_names()
 
-        if template is None:
-            return super(SingleObjectTemplateResponseMixin) \
-                .get_template_names(self)
-        else:
-            return [template, ]
+        return [self.template_name, "%s%s"
+                % (self.template_name, self.template_name_suffix)]
 
-class OctopusDetailView(AjaxDetailResponseMixin, DetailView):
+views = (DetailView, ListView, DateDetailView, TodayArchiveView,
+         DayArchiveView, WeekArchiveView, MonthArchiveView, YearArchiveView,
+         ArchiveIndexView)
 
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
 
-class OctopusListView(AjaxDetailResponseMixin, ListView):
+# Inject AjaxResponseMixin into each view and tack "Octopus" on to the
+# beginning of the class .
+for view in views:
+    name = 'Octopus%s' % view.__name__
 
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
+    locals()[name] = type(name, (AjaxResponseMixin, view), {
+        'parent': view
+    })
