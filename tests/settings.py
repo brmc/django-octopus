@@ -12,6 +12,7 @@ DEBUG = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
+APPEND_SLASHES = True
 
 TEMPLATE_DIRECTORIES = (
     os.path.join(os.path.dirname(os.path.realpath(__file__)),
