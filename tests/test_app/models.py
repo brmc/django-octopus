@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 class TestModel(models.Model):
-    pass
+    date = models.DateField(default=datetime.today())
