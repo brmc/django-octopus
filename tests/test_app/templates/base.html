@@ -9,14 +9,14 @@
 </head>
 <body>
 <nav>
-    <li>{% a 'home' 'body' 'home' %}</li>
-    <li>{% a 'detail' '#main' 'detail' 1 title="balls"%}</li>
-    <li>{% a 'list' '#main' 'list' action="append" %}</li>
-    <li>{% a 'archive' '#main' 'archive' action="prepend" %}</li>
-    <li><a target="#main" action="action" method="get" class="octopus-link" href="/13413/kexi/amdf" title="None">text</a></li>
-    <li></li>
+    <li>{% a 'home(replace)' 'body' 'home' %}</li>
+    <li>{% a 'detail(replace)' '#main' 'detail' 1 title="balls"%}</li>
+    <li>{% a 'list(append)' '#main' 'list' action="append" %}</li>
+    <li>{% a 'archive(prepend)' '#main' 'archive' action="prepend" %}</li>
+    <li>{% a '404(prepend)' '#main' '/asdfdsf/sdfsa/sf' action="replace" %}</li>
+
 </nav>
-<div id="main">Hello</div>
+<div id="main">{% block content %}Hello {% endblock content %}</div>
 </body>
 <footer>
     <script src="//code.jquery.com/jquery-1.11.2.js"></script>
@@ -73,6 +73,8 @@
 
         });
         $(function(){
+    // Sets the initial state in the browser, so back/forward will
+    // work with the landing site
     history.replaceState({
         title: window.location.pathname,
         target: 'body',
@@ -83,11 +85,12 @@
     $('a.octopus-link').click(function(e){
         e.preventDefault();
 
+        var title = new String;  var content = new String;
         var obj = this;
-
-        var title = content = "";
-        var state = {};
+        var error_content;  // container for error messages
+        var state = {};     // Dict to pass to pushState
         var action = $(obj).attr('action');
+
         var request = $.ajax({
             url: this.href,
             type: $(this).attr('method')
@@ -103,34 +106,37 @@
                     break;
                 case "replace":
                     content = data;
-
             }
-            state = {
-                title: title,
-                target: obj.target,
-                container: content
-            };
 
         }).fail(function( jqXHR, textStatus, errorThrown){
-            title = content = jqXHR.status+" "+errorThrown;
+            title = content = error_content = jqXHR.status+" "+errorThrown;
+        }).always(function(data){
+            data = !error_content ? data : error_content;
+
             state = {
                 title: title,
                 target: obj.target,
                 container: content
             };
-        }).always(function(){
+
             switch(action){
-                case('prepend'):
-
-                case('append'):
-
+                case 'prepend':
+                    var elem = $(document.createElement('div')).html(data).hide();
+                    $(obj.target).prepend(elem);
+                    $(elem).slideDown();
+                    break;
+                case 'append':
+                    var elem = $(document.createElement('div')).html(data).hide();
+                    $(obj.target).append(elem);
+                    $(elem).slideDown();
+                    break;
                 default:
                     $(obj.target).fadeOut('fast', function() {
-                        $(this).html(content).fadeIn('slow');
+                        $(this).html(data).fadeIn('slow');
                         $('title').text(title);
                     });
-                }
-                window.history.pushState(state, "", obj.href);
+            }
+            window.history.pushState(state, "", obj.href);
         });
     });
 

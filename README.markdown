@@ -27,7 +27,7 @@ pages to be loaded or refreshed modularly.
         'octopus',
         ...
    )
-
+You may need to 
 3\. Templates
     <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript">
     </script>

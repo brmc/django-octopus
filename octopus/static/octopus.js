@@ -1,4 +1,6 @@
 $(function(){
+    // Sets the initial state in the browser, so back/forward will
+    // work with the landing site
     history.replaceState({
         title: window.location.pathname,
         target: 'body',
@@ -9,18 +11,19 @@ $(function(){
     $('a.octopus-link').click(function(e){
         e.preventDefault();
 
+        var title = new String;  var content = new String;
         var obj = this;
-        var type = this.type == "" ? 'get' : this.type;
-        var title = content = "";
-        var state = {};
+        var error_content;  // container for error messages
+        var state = {};     // Dict to pass to pushState
+        var action = $(obj).attr('action');
 
         var request = $.ajax({
             url: this.href,
-            type: type
+            type: $(this).attr('method')
         }).done(function(data){
-
             title = obj.title;
-            switch(obj.action)
+
+            switch(action){
                 case "append":
                     content = $(obj.target).html() + data;
                     break;
@@ -28,28 +31,39 @@ $(function(){
                     content = data + $(obj.target).html();
                     break;
                 case "replace":
-                default:
                     content = data;
             }
-            state = {
-                title: title,
-                target: obj.target,
-                container: data
-            };
 
         }).fail(function( jqXHR, textStatus, errorThrown){
-            title = content = jqXHR.status+" "+errorThrown;
+            title = content = error_content = jqXHR.status+" "+errorThrown;
+        }).always(function(data){
+            data = !error_content ? data : error_content;
+
             state = {
                 title: title,
                 target: obj.target,
                 container: content
             };
-        }).always(function(){
-            $(obj.target).fadeOut('fast', function() {
-                $(this).html(content).fadeIn('slow');
-                $('title').text(title);
-                window.history.pushState(state, "", obj.href);
-            });
+
+            switch(action){
+                case 'prepend':
+                    //var elem = $(document.createElement('div')).html(data).hide();
+                    $(data).hide();
+                    $(obj.target).prepend(data);
+                    $(elem).slideDown();
+                    break;
+                case 'append':
+                    var elem = $(document.createElement('div')).html(data).hide();
+                    $(obj.target).append(elem);
+                    $(elem).slideDown();
+                    break;
+                default:
+                    $(obj.target).fadeOut('fast', function() {
+                        $(this).html(data).fadeIn('slow');
+                        $('title').text(title);
+                    });
+            }
+            window.history.pushState(state, "", obj.href);
         });
     });
 
