@@ -19,7 +19,7 @@ pages to be loaded or refreshed modularly.
     * [Manually Creating Links](#manually-creating-links)
     * [Creating Templates](#creating-templates)
 * [Configuration](#configuration)
-* [What it does not do (...yet?)](#what-it-does-not-do-yet)
+* [Todo](#todo)
 
 
 ## Quick start ##
@@ -144,7 +144,7 @@ back/forward functionality.
   https://docs.djangoproject.com/en/dev/ref/csrf/#ajax  
   so feel free to write your own.  There's nothing special about it.
   
-  C.  Include `octopux.js`
+  C.  Include `octopus.js`
   
     <script src="{% static 'octopus/octopus.js' %}" type="text/javascript"></script>
     
@@ -167,8 +167,9 @@ There's just two steps:
 #### Creating Class-Based Views ####
 
 Generic views have been created for the detail, list, and time-based views 
-following the naming convention of Octopus<OriginalViewName>.  If that doesn't 
-make sense, here's an explicit list of the available views with their 
+following the naming convention of taking `Octopus` onto existing view 
+names: `Octopus<OriginalViewName>`.  If that doesn't make sense, here's 
+an explicit list of the available views with their 
 respective counter parts:
 
 | Octopus View            |      Django View |
@@ -242,9 +243,23 @@ the last minute, so proceed at your own risk.
 
 ### Template Tags ###
 
+Only the first three arguments are requried, but in your template, you would 
+build a full link like so: 
+
+    {% load a %}
+    
+    {% a "Link Text" "#container" "detail" object.id method="post" action="prepend" id="cantelope" classes="inline-block article" title="Manatee killed by Cantelope" %}
+    
+This would create an anchor with the id `cantelope` and classes `octopus-link`, 
+`inline-block, article`. `octopus-link` is added automatically to provide 
+the necessary functionality. When clicked, the link would make a request to 
+the url/path rendered from the url named `detail` passing it the `object.id` 
+via a `POST` request. The HTML returned would then be prepended to `#container`, 
+and the document would be give a new title.
+
 The order for the template tags are: 
 
-Link text, target element, url name, url arguments, kwargs.
+Link text, target element, url name, url arguments, kwargs. 
 
 * **Link Text**: the visible, clickable text for the link.
  
@@ -283,11 +298,11 @@ build the links yourself.
 
 But it's not hard. The only required attributes are:
 
-* href="..."
+* `href="..."`
 
-* target="..."
+* `target="..."`
 
-* class="octopus-link ..."
+* `class="octopus-link ..."`
 
 Then you can pass the kwargs as defined in [Template Tags](#template-tags)
 
@@ -297,7 +312,8 @@ Then you can pass the kwargs as defined in [Template Tags](#template-tags)
 A very basic template schema might look something like this:
 
 Full template:
-
+    {% load static %}
+    {% load a %}
     <!doctype html>
     <html>
     <head>
@@ -309,7 +325,10 @@ Full template:
             {% include "template_fragment.html" %}
         </main>
         ...
-        <!--javascript stuff -->
+        <footer>
+                <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
+                <script src="{% static 'octopus/both.js' %}" type="text/javascript"></script>
+        </footer>
     </body>
     </html>
     
