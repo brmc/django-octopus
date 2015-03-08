@@ -312,6 +312,7 @@ Then you can pass the kwargs as defined in [Template Tags](#template-tags)
 A very basic template schema might look something like this:
 
 Full template:
+
     {% load static %}
     {% load a %}
     <!doctype html>
@@ -326,8 +327,8 @@ Full template:
         </main>
         ...
         <footer>
-                <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
-                <script src="{% static 'octopus/both.js' %}" type="text/javascript"></script>
+            <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
+            <script src="{% static 'octopus/both.js' %}" type="text/javascript"></script>
         </footer>
     </body>
     </html>
