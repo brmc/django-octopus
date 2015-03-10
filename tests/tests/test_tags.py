@@ -18,14 +18,14 @@ class TagsTest(TestCase):
                 "target",
                 "detail",
                 self.id,
-                action="append",
+                insert="append",
                 classes="poop",
                 id="man",
                 title="title"),
             OrderedDict({
                 'id': 'man',
                 'target': 'target',
-                'action': 'append',
+                'insert': 'append',
                 'method': 'get',
                 'classes': 'poop',
                 'href': '/detail/1',
@@ -43,7 +43,7 @@ class TagsTest(TestCase):
                 "multi",
                 self.id,
                 'a',
-                action="prepend",
+                insert="prepend",
                 method='get',
                 classes="poop",
                 id="man",
@@ -51,7 +51,7 @@ class TagsTest(TestCase):
             OrderedDict({
                 'id': 'man',
                 'target': 'target',
-                'action': 'prepend',
+                'insert': 'prepend',
                 'classes': 'poop',
                 'method': 'get',
                 'href': '/multi/1/a',
@@ -72,7 +72,7 @@ class TagsTest(TestCase):
             OrderedDict({
                 'id': 'man',
                 'target': 'target',
-                'action': 'replace',
+                'insert': 'replace',
                 'method':'post',
                 'classes': 'poop',
                 'href': '/list/',
@@ -87,14 +87,14 @@ class TagsTest(TestCase):
             "target",
             "detail",
             self.id,
-            action="append",
+            insert="append",
             classes="poop",
             id="man",
             title="title"
         )
 
         self.assertEqual(render_to_string('octopus/link.html', context),
-            u'<a id="man" target="target" action="append" method="get" class="octopus-link poop" href="/detail/%d" title="title">text</a>' % self.id
+            u'<a id="man" target="target" insert="append" method="get" class="octopus-link poop" href="/detail/%d" title="title">text</a>' % self.id
         )
 
     def test_render_template_nokwargs(self):
@@ -103,9 +103,9 @@ class TagsTest(TestCase):
             "target",
             "detail",
             self.id,
-            action="prepend",
+            insert="prepend",
          )
 
         self.assertEqual(render_to_string('octopus/link.html', context),
-            u'<a target="target" action="prepend" method="get" class="octopus-link" href="/detail/%d" title="None">text</a>' % self.id
+            u'<a target="target" insert="prepend" method="get" class="octopus-link" href="/detail/%d" title="None">text</a>' % self.id
         )

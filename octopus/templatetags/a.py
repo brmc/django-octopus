@@ -21,15 +21,15 @@ def a(text, target, url_name, *url_args, **kwargs):
     :param target: The html element, class, or id to catch the returned data
     :type target: str with the selector prefix if applicable: body, .className,
         #idname
-    :param action: Dictates how to handle the incoming data. Allowed values:
+    :param insert: Dictates how to handle the incoming data. Allowed values:
         replace, append, prepend.
         Defaults to replace
-    :type action: str
+    :type insert: str
     :param url_name: The name of the url pattern defined in your urls.py
     :type url_name: str
     :param url_args: Any arguments to be passed to this url
     :param kwargs: Expected kwargs(with default in parentheses):
-        method("get"), action("replace"), classes(None), id(None), title(None)
+        method("get"), insert("replace"), classes(None), id(None), title(None)
     :type kwargs: str
     :return: OrderedDict
     """
@@ -44,18 +44,18 @@ def a(text, target, url_name, *url_args, **kwargs):
 
     # I'm setting default values here rather than above so that the tag would
     # be easier to use and feel more natural.
-    method, action, classes, id_, title = \
-        map(kwargs.get, ['method', 'action', 'classes', 'id', 'title'],
+    method, insert, classes, id_, title = \
+        map(kwargs.get, ['method', 'insert', 'classes', 'id', 'title'],
                         ['get',    'replace', None,     None,  None, ])
 
-    if action.lower() not in ['replace', 'append', 'prepend']:
-        raise ImproperlyConfigured("%s is not a valid value for action. It "
+    if insert.lower() not in ['replace', 'append', 'prepend']:
+        raise ImproperlyConfigured("%s is not a valid value for insert. It "
                                    "should be: replace, append, or prepend.")
 
     return OrderedDict({
         'id': id_,
         'target': target,
-        'action': action,
+        'insert': insert,
         'classes': classes,
         'method': method,
         'href': href,

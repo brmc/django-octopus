@@ -18,6 +18,8 @@ TEMPLATE_DIRECTORIES = (
     os.path.join(os.path.dirname(os.path.realpath(__file__)),
                  'test_app/templates'))
 
+MIDDLEWARE_CLASSES = ('django.middleware.csrf.CsrfViewMiddleware', )
+
 ROOT_URLCONF = "test_app.urls"
 
 DATABASES = {

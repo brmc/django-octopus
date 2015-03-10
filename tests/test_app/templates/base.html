@@ -6,19 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-</head>
-<body>
-<nav>
-    <li>{% a 'home(replace)' 'body' 'home' %}</li>
-    <li>{% a 'detail(replace)' '#main' 'detail' 1 title="balls"%}</li>
-    <li>{% a 'list(append)' '#main' 'list' action="append" %}</li>
-    <li>{% a 'archive(prepend)' '#main' 'archive' action="prepend" %}</li>
-    <li>{% a '404(prepend)' '#main' '/asdfdsf/sdfsa/sf' action="replace" %}</li>
-
-</nav>
-<div id="main">{% block content %}Hello {% endblock content %}</div>
-</body>
-<footer>
     <script src="//code.jquery.com/jquery-1.11.2.js"></script>
     <script>
         $(window).load(function() {
@@ -73,7 +60,7 @@
 
         });
         $(function(){
-    // Sets the initial state in the browser, so back/forward will
+// Sets the initial state in the browser, so back/forward will
     // work with the landing site
     history.replaceState({
         title: window.location.pathname,
@@ -81,23 +68,52 @@
         container: $('body').html()
     });
 
+    function link_helper(e){
+       e.preventDefault();
+        var insert = $(this).attr('insert');
+        request(this, insert, this.href);
+    }
 
-    $('a.octopus-link').click(function(e){
-        e.preventDefault();
+    function form_helper(e){
+       e.preventDefault();
+        alert(1);
+        var data = $(this).serializeArray();
+        request(this, "append", this.action, data);
+    }
+
+    $.fn.extend({
+        bindOctopus: function(){
+            //alert($('body').find('.octopus-form').length);
+            if (this.hasClass('.octopus-link')){
+                $(this).bind('click', link_helper);
+            }
+            if (this.hasClass(".octopus-form")){
+                $(this).on('submit', form_helper);
+                alert(1);
+            }
+
+            $(this).find('.octopus-link').on('click', link_helper);
+            $(this).find('.octopus-form').bind('submit', form_helper);
+
+        }
+    });
+
+    function request(obj, insert, href, dataArray){
 
         var title = new String;  var content = new String;
-        var obj = this;
         var error_content;  // container for error messages
         var state = {};     // Dict to pass to pushState
-        var action = $(obj).attr('action');
 
-        var request = $.ajax({
-            url: this.href,
-            type: $(this).attr('method')
+        dataArray = dataArray || {};
+
+        $.ajax({
+            url: href,
+            type: $(obj).attr('method'),
+            data: dataArray
         }).done(function(data){
             title = obj.title;
 
-            switch(action){
+            switch(insert){
                 case "append":
                     content = $(obj.target).html() + data;
                     break;
@@ -119,26 +135,32 @@
                 container: content
             };
 
-            switch(action){
+            switch(insert){
                 case 'prepend':
                     var elem = $(document.createElement('div')).html(data).hide();
                     $(obj.target).prepend(elem);
-                    $(elem).slideDown();
+                    $(elem).slideDown("fast", $(this).bindOctopus());
                     break;
                 case 'append':
                     var elem = $(document.createElement('div')).html(data).hide();
                     $(obj.target).append(elem);
-                    $(elem).slideDown();
+                    $(elem).slideDown("fast", $(this).bindOctopus());
                     break;
                 default:
                     $(obj.target).fadeOut('fast', function() {
-                        $(this).html(data).fadeIn('slow');
+                        $(this).html(data).fadeIn('fast',
+                                $(this).bindOctopus());
                         $('title').text(title);
                     });
             }
-            window.history.pushState(state, "", obj.href);
+            window.history.pushState(state, "", href);
+
         });
-    });
+    }
+
+
+    $('.octopus-link').on('click', link_helper);
+    $('.octopus-form').on('submit', form_helper);
 
     $(window).on('popstate', function(event) {
         var state = event.originalEvent.state;
@@ -150,5 +172,20 @@
     });
 });
     </script>
+</head>
+<body>
+<nav>
+    <li>{% a 'home(replace)' '#main' 'home' %}</li>
+    <li>{% a 'detail(replace)' '#main' 'detail' 1 title="balls"%}</li>
+    <li>{% a 'list(append)' '#main' 'list' insert="append" %}</li>
+    <li>{% a 'archive(prepend)' '#main' 'archive' insert="prepend" %}</li>
+    <li>{% a 'create' '#main' 'create' insert="append" %}</li>
+    <li>{% a '404(prepend)' '#main' '/asdfdsf/sdfsa/sf' insert="replace" %}</li>
+
+</nav>
+<div id="main">{% block content %}Hello {% endblock content %}</div>
+</body>
+<footer>
 </footer>
+
 </html>

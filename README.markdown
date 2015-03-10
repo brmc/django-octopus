@@ -66,12 +66,12 @@ writing your own functional views.
 5\. Create your links.  Manually, :
 
     <a href="{% url 'detail' object.id %}" class="octopus-link"
-    target="#container" action="replace" method="get" title="New title">Link 
+    target="#container" insert="replace" method="get" title="New title">Link 
     Text</a>
 
 or or with a template tag
 
-    {% a 'Link Text' '#container' 'detail' object.id action="replace" method="get" title="New title %}
+    {% a 'Link Text' '#container' 'detail' object.id insert="replace" method="get" title="New title %}
 
 See [Usage](#template-tags) for details on what these parameters mean and other 
 parameters and their default values.
@@ -80,6 +80,13 @@ parameters and their default values.
 
 
 ## Changelog (Recent Changes)
+
+## v0.2
+
+### Changes
+
+* `action` attribute in the template tags was changed to `insert` to avoid
+conflicts with form attributes.  This is NOT backwards compatible.
 
 ### v0.1
 
@@ -248,7 +255,7 @@ build a full link like so:
 
     {% load a %}
     
-    {% a "Link Text" "#container" "detail" object.id method="post" action="prepend" id="cantelope" classes="inline-block article" title="Manatee killed by Cantelope" %}
+    {% a "Link Text" "#container" "detail" object.id method="post" insert="prepend" id="cantelope" classes="inline-block article" title="Manatee killed by Cantelope" %}
     
 This would create an anchor with the id `cantelope` and classes `octopus-link`, 
 `inline-block, article`. `octopus-link` is added automatically to provide 
@@ -276,7 +283,7 @@ pass a hard-coded url.
     * **method**: the HTTP Method with which you wish to make the ajax request.  
     **Default** `get`
     
-    * **action**: how the incoming text will be inserted  
+    * **insert**: how the incoming text will be inserted  
       **values**: `replace`, `prepend`, `append`   
       **Default** `replace`
     

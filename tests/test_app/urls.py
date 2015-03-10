@@ -4,12 +4,15 @@ from django.views.generic.base import TemplateView
 from test_app.views import DetailView, ListView, SuffixView, \
     DateDetailView, YearArchiveView, \
     ArchiveIndexView, DayArchiveView, WeekArchiveView, MonthArchiveView, \
-    TodayArchiveView
+    TodayArchiveView,UpdateView, CreateView, DeleteView
 
 
 urlpatterns = patterns(
    '',
    url(r'^/?$', TemplateView.as_view(template_name='base.html'), name="home"),
+   url(r'^create/$', CreateView.as_view(), name="create"),
+   url(r'^update/(?P<pk>\d)$', UpdateView.as_view(), name="update"),
+   url(r'delete/(?P<pk>\d)$', DeleteView.as_view(), name='delete'),
    url(r'^list/', ListView.as_view(), name="list"),
    url(r'^detail/(?P<pk>\d)', DetailView.as_view(), name="detail"),
    url(r'^suffix/(?P<pk>\d)', SuffixView.as_view(), name="suffix"),

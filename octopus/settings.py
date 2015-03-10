@@ -13,3 +13,6 @@ TRUE_SETTINGS = [
 
 for setting in TRUE_SETTINGS:
     locals()[setting] = getattr(settings, "OCTOPUS_%s" % setting, True)
+
+
+__all__ = TRUE_SETTINGS

@@ -7,19 +7,11 @@ $(function(){
         container: $('body').html()
     });
 
-
-    $('a.octopus-link').click(function(e){
-        e.preventDefault();
-
-        var title = new String;  var content = new String;
-        var obj = this;
-        var error_content;  // container for error messages
-        var state = {};     // Dict to pass to pushState
-        var action = $(obj).attr('action');
-
-        var request = $.ajax({
-            url: this.href,
-            type: $(this).attr('method')
+    function request(title, obj, error_content, action, d){
+        $.ajax({
+            url: obj.href,
+            type: $(obj).attr('method'),
+            data: d
         }).done(function(data){
             title = obj.title;
 
@@ -39,7 +31,7 @@ $(function(){
         }).always(function(data){
             data = !error_content ? data : error_content;
 
-            state = {
+            var state = {
                 title: title,
                 target: obj.target,
                 container: content
@@ -64,6 +56,24 @@ $(function(){
             }
             window.history.pushState(state, "", obj.href);
         });
+    }
+
+    $(.octopus).on('submit', function(e){
+        e.preventDefault();
+
+    });
+
+    $('.octopus-link').click(function(e){
+        e.preventDefault();
+
+        var title = new String;  var content = new String;
+        var obj = this;
+        var error_content;  // container for error messages
+        var state = {};     // Dict to pass to pushState
+        var action = $(obj).attr('action');
+        var d = this.serializeArray();
+        request(title, obj, error_content, action, d);
+
     });
 
     $(window).on('popstate', function(event) {

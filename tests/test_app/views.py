@@ -2,9 +2,15 @@ from django.views.generic.dates import DayArchiveView
 from octopus.views import OctopusDetailView, OctopusListView, \
     OctopusDateDetailView, OctopusYearArchiveView, OctopusArchiveIndexView, \
     OctopusDayArchiveView, OctopusWeekArchiveView, OctopusMonthArchiveView, \
-    OctopusTodayArchiveView
+    OctopusTodayArchiveView, OctopusCreateView, OctopusUpdateView, \
+    OctopusDeleteView
 from test_app.models import TestModel
 
+
+__all__ = ['DetailView', 'ListView', 'SuffixView',
+    'DateDetailView', 'YearArchiveView',
+    'ArchiveIndexView', 'DayArchiveView', 'WeekArchiveView', 'MonthArchiveView',
+    'TodayArchiveView', 'CreateView', 'UpdateView', 'DeleteView']
 
 class DetailView(OctopusDetailView):
     model = TestModel
@@ -56,3 +62,14 @@ class MonthArchiveView(OctopusMonthArchiveView):
 class TodayArchiveView(OctopusTodayArchiveView):
     model = TestModel
     date_field = 'date'
+
+edit_views = (OctopusCreateView, OctopusUpdateView, OctopusDeleteView)
+
+for view in edit_views:
+    name = view.__name__.replace("Octopus", "")
+
+    locals()[name] = type(name, (view, ), {
+        'model': TestModel,
+        'success_url': '/list/',
+        'exclude': ('id', )
+    })

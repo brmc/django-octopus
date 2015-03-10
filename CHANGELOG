@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2
+
+### Changes
+
+* `action` attribute in the template tags was changed to `insert` to avoid
+conflicts with form attributes
+
 ## v0.1
 
 ### Features
