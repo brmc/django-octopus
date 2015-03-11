@@ -45,12 +45,3 @@ for view in views:
     locals()[name] = type(name, (AjaxResponseMixin, view), {
         'parent': view
     })
-
-
-'''edit_views = (FormView, CreateView, UpdateView, DeleteView)
-
-for view in edit_views:
-    name = 'Octopus%s' % view.__name__
-
-    locals()[name] = type(name, (AjaxResponseMixin, view))
-'''
