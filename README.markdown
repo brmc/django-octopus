@@ -185,6 +185,8 @@ respective counter parts:
 
 | Octopus View            |      Django View |
 |-------------------------|------------------|
+| OctopusView             | View             |
+| OctopusTemplateView     | TemplateView
 | OctopusDetailView       | DetailView       |
 | OctopusListView         | ListView         |
 | OctopusArchiveIndexView | ArchiveIndexView |

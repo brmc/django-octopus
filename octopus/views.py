@@ -3,6 +3,7 @@ from django.views.generic.dates import DateDetailView, YearArchiveView, \
     TodayArchiveView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView, CreateView, UpdateView, \
     DeleteView
 
@@ -12,10 +13,21 @@ __all__ = [
     'OctopusYearArchiveView', 'OctopusArchiveIndexView',
     'OctopusDayArchiveView', 'OctopusWeekArchiveView',
     'OctopusMonthArchiveView', 'OctopusTodayArchiveView', 'OctopusCreateView',
-    'OctopusUpdateView', 'OctopusDeleteView']
+    'OctopusUpdateView', 'OctopusDeleteView', 'OctopusTemplateView',
+    'OctopusView']
+
+OctopusDetailView = OctopusListView = OctopusDateDetailView = \
+    OctopusYearArchiveView = OctopusArchiveIndexView = \
+    OctopusDayArchiveView = OctopusWeekArchiveView = \
+    OctopusMonthArchiveView = OctopusTodayArchiveView = OctopusCreateView = \
+    OctopusUpdateView = OctopusDeleteView = object
 
 
 class AjaxResponseMixin(object):
+    """ use this to add Octopus functionality to your views
+
+    Be sure to set `parent` to the main class from which you're inheriting
+    """
     fragment_name = None
     fragment_suffix = '_fragment'
 
@@ -34,7 +46,8 @@ class AjaxResponseMixin(object):
 
 views = (DetailView, ListView, DateDetailView, TodayArchiveView,
          DayArchiveView, WeekArchiveView, MonthArchiveView, YearArchiveView,
-         ArchiveIndexView, FormView, CreateView, UpdateView, DeleteView)
+         ArchiveIndexView, FormView, CreateView, UpdateView, DeleteView,
+         TemplateView, View)
 
 
 # Inject AjaxResponseMixin into each view and tack "Octopus" on to the

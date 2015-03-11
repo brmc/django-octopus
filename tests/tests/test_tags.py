@@ -124,6 +124,7 @@ class TestForm(TestCase):
     class MForm(ModelForm):
         class Meta:
             model = TestModel
+            fields = ('date', )
 
     def test_render_minimum_form(self):
         context = form(

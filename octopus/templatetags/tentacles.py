@@ -77,12 +77,22 @@ def a(text, target, url_name, *url_args, **kwargs):
 
 
 @register.inclusion_tag('octopus/form.html')
-def form(text, target, url_name, *url_args, **kwargs):
+def form(text, form, url_name, *url_args, **kwargs):
     """ Wrapper to create a form compatible with Octopus
 
+    :param form: an instance of a form
+    :type form: FormObject
     :param text: The text that goes on the Submit button
     :type text: str
     :returns: dict
     """
 
-    return create_html_tag(text, target, url_name, *url_args, **kwargs)
+    # Default values for forms should differ from regular links
+    kwargs['method'], kwargs['insert'] = map(kwargs.get, ['method', 'insert'],
+                                                         ['post',   'self'])
+
+    context = create_html_tag(text, kwargs.pop('target', None),
+                              url_name, *url_args, **kwargs)
+    context['form'] = form
+
+    return context

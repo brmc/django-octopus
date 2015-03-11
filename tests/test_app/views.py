@@ -71,5 +71,5 @@ for view in edit_views:
     locals()[name] = type(name, (view, ), {
         'model': TestModel,
         'success_url': '/list/',
-        'exclude': ('id', )
+        'fields': ('date', )
     })
