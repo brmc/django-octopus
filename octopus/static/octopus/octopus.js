@@ -1,5 +1,5 @@
 $(function(){
-    // Sets the initial state in the browser, so back/forward will
+ // Sets the initial state in the browser, so back/forward will
     // work with the landing site
     history.replaceState({
         title: window.location.pathname,
@@ -7,15 +7,42 @@ $(function(){
         container: $('body').html()
     });
 
-    function request(title, obj, error_content, action, d){
+    function link_helper(e){
+       e.preventDefault();
+        var insert = $(this).attr('insert');
+        request(this, insert, this.href);
+    }
+
+    function form_helper(e){
+       e.preventDefault();
+        var data = $(this).serializeArray();
+        request(this, $(this).attr('insert'), this.action, data);
+    }
+
+    $.fn.extend({
+        bindOctopus: function(){
+            $(this).find('.octopus-link').unbind('click').bind('click', link_helper);
+            $(this).find('.octopus-form').unbind('submit').bind('submit', form_helper);
+
+        }
+    });
+
+    function request(obj, insert, href, dataArray){
+
+        var title = new String;  var content = new String;
+        var error_content;  // container for error messages
+        var state = {};     // Dict to pass to pushState
+
+        dataArray = dataArray || {};
+
         $.ajax({
-            url: obj.href,
+            url: href,
             type: $(obj).attr('method'),
-            data: d
+            data: dataArray
         }).done(function(data){
             title = obj.title;
 
-            switch(action){
+            switch(insert){
                 case "append":
                     content = $(obj.target).html() + data;
                     break;
@@ -23,6 +50,7 @@ $(function(){
                     content = data + $(obj.target).html();
                     break;
                 case "replace":
+                default:
                     content = data;
             }
 
@@ -31,50 +59,53 @@ $(function(){
         }).always(function(data){
             data = !error_content ? data : error_content;
 
-            var state = {
+            state = {
                 title: title,
                 target: obj.target,
                 container: content
             };
 
-            switch(action){
+            switch(insert){
                 case 'prepend':
                     var elem = $(document.createElement('div')).html(data).hide();
-                    $(obj.target).prepend(data);
-                    $(elem).slideDown();
+                    $(obj.target).prepend(elem);
+                    $(elem).slideDown("fast", function(){
+                        $(obj.target).bindOctopus();
+                    });
                     break;
                 case 'append':
                     var elem = $(document.createElement('div')).html(data).hide();
                     $(obj.target).append(elem);
-                    $(elem).slideDown();
+                    $(elem).slideDown("fast", function(){
+                        $(obj.target).bindOctopus();
+                    });
+
+                    break;
+                case 'self':
+                    $(obj).fadeOut('fast', function() {
+                        $(obj).html(data).fadeIn('fast', function(){
+                            $(obj.target).bindOctopus();
+                        });
+                        $('title').text(title);
+                    });
                     break;
                 default:
+
                     $(obj.target).fadeOut('fast', function() {
-                        $(this).html(data).fadeIn('slow');
+                        $(this).html(data).fadeIn('fast', function(){
+                            $(obj.target).bindOctopus();
+                        });
                         $('title').text(title);
                     });
             }
-            window.history.pushState(state, "", obj.href);
+            window.history.pushState(state, "", href);
+
         });
     }
 
-    $(.octopus).on('submit', function(e){
-        e.preventDefault();
 
-    });
-
-    $('.octopus-link').click(function(e){
-        e.preventDefault();
-
-        var title = new String;  var content = new String;
-        var obj = this;
-        var error_content;  // container for error messages
-        var state = {};     // Dict to pass to pushState
-        var action = $(obj).attr('action');
-        var d = this.serializeArray();
-        request(title, obj, error_content, action, d);
-
-    });
+    $('.octopus-link').on('click', link_helper);
+    $('.octopus-form').on('submit', form_helper);
 
     $(window).on('popstate', function(event) {
         var state = event.originalEvent.state;
