@@ -7,11 +7,13 @@ from django.views.generic.edit import FormView, CreateView, UpdateView, \
     DeleteView
 
 
-__all__ = ['OctopusDetailView', 'OctopusListView',
-    'OctopusDateDetailView', 'OctopusYearArchiveView', 'OctopusArchiveIndexView',
-    'OctopusDayArchiveView', 'OctopusWeekArchiveView', 'OctopusMonthArchiveView',
-    'OctopusTodayArchiveView', 'OctopusCreateView', 'OctopusUpdateView',
-    'OctopusDeleteView']
+__all__ = [
+    'OctopusDetailView', 'OctopusListView', 'OctopusDateDetailView',
+    'OctopusYearArchiveView', 'OctopusArchiveIndexView',
+    'OctopusDayArchiveView', 'OctopusWeekArchiveView',
+    'OctopusMonthArchiveView', 'OctopusTodayArchiveView', 'OctopusCreateView',
+    'OctopusUpdateView', 'OctopusDeleteView']
+
 
 class AjaxResponseMixin(object):
     fragment_name = None

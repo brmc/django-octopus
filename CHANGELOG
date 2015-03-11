@@ -5,7 +5,25 @@
 ### Changes
 
 * `action` attribute in the template tags was changed to `insert` to avoid
-conflicts with form attributes
+conflicts with form attributes.  This is not backwards compatible.
+
+* Changed the name of the file in the template tag from `a.py` to
+`tentacles.py`. `{% load a %}` is deprecated.  Change it to
+`{% load tentacles %}`
+
+
+### New Features
+
+* Create-, Update-, and DeleteViews support added and tested.
+
+* New template tag to create forms
+
+* Added `self` to allowed `insert` methods.  This is similar to `replace` but
+in case several nodes have been appended or prepended, it only replaces the
+exact node in question rather than overwriting the contents of the entire
+`target`.  This allows for creating, editing, or deleting multiple models in
+place and saving them individually. If `insert="self"` is set, `target` is
+ignored.
 
 ## v0.1
 

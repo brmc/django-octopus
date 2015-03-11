@@ -12,11 +12,11 @@ description = """"""
 
 setup(
     name     = 'django-octopus',
-    version  = '0.1',
+    version  = '0.2',
     packages = find_packages(),
     include_package_data=True,
-    requires = ['python (>= 2.7)', 'django (>= 1.6)'],
-    description  = 'A simple pull framework for django',
+    requires = ['python (2.7, 3.3, 3.4)', 'django (>= 1.5)'],
+    description  = 'A simple AJAX pull framework for django',
     author       = 'Brian McClure',
     author_email = 'brian.mcclr@gmail.com',
     url          = 'https://github.com/brmc/django-octopus',

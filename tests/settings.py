@@ -12,6 +12,12 @@ DEBUG = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+  # ...
+  'django.core.context_processors.request',
+  # ...
+)
+
 APPEND_SLASHES = True
 
 TEMPLATE_DIRECTORIES = (

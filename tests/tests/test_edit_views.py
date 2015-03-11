@@ -1,7 +1,7 @@
 from datetime import date
 from django.test import RequestFactory
 from django.test.testcases import TestCase
-from tests.test_app.models import TestModel
+from test_app.models import TestModel
 
 
 class TestEditViews(TestCase):
@@ -15,20 +15,62 @@ class TestEditViews(TestCase):
         self.n.save()
 
     def test_create_view(self):
-        pass
+        response = self.client.get('/create/', {},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        self.assertEqual(["test_app/testmodel_form_fragment.html", ],
+                         response.template_name)
+
+    def test_create_view_success(self):
+        response = self.client.post('/create/',
+            { 'date': date(2015, 2, 21) },
+            follow=True,
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        self.assertEqual(200, response.status_code)
+        self.assertTrue('fragment_list.html' in response.template_name)
 
     def test_create_view_failure(self):
-        pass
+        response = self.client.post('/create/',
+            {'date': 1},
+            follow=True,
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertTrue('test_app/testmodel_form_fragment.html' in response.template_name)
 
     def test_update_view(self):
-        pass
+        response = self.client.get('/update/1',
+            {},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        self.assertEqual(["test_app/testmodel_form_fragment.html", ],
+                         response.template_name)
+
+    def test_update_success(self):
+        response = self.client.post('/update/1',
+            { 'date': date(2015, 2, 21) },
+            follow=True,
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        self.assertEqual(200, response.status_code)
+        self.assertTrue('fragment_list.html' in response.template_name)
 
     def test_update_view_failure(self):
-        pass
+        response = self.client.post('/update/1',
+            {'date': 1},
+            follow=True,
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertTrue('test_app/testmodel_form_fragment.html' in response.template_name)
 
     def test_delete_view(self):
-        pass
+        response = self.client.get('/delete/1',
+            {},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        self.assertEqual("test_app/testmodel_confirm_delete_fragment" in
+                         response.template_name)
 
     def test_delete_view(self):
-        pass
+        response = self.client.post('/delete/1',
+            {},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+            follow=True)
+        self.assertTrue("fragment_list.html" in
+                         response.template_name)
 

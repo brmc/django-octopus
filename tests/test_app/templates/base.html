@@ -1,5 +1,5 @@
 
-{% load a %}
+{% load tentacles %}
 
 <!doctype html>
 <html lang="en">
@@ -76,24 +76,14 @@
 
     function form_helper(e){
        e.preventDefault();
-        alert(1);
         var data = $(this).serializeArray();
-        request(this, "append", this.action, data);
+        request(this, $(this).attr('insert'), this.action, data);
     }
 
     $.fn.extend({
         bindOctopus: function(){
-            //alert($('body').find('.octopus-form').length);
-            if (this.hasClass('.octopus-link')){
-                $(this).bind('click', link_helper);
-            }
-            if (this.hasClass(".octopus-form")){
-                $(this).on('submit', form_helper);
-                alert(1);
-            }
-
-            $(this).find('.octopus-link').on('click', link_helper);
-            $(this).find('.octopus-form').bind('submit', form_helper);
+            $(this).find('.octopus-link').unbind('click').bind('click', link_helper);
+            $(this).find('.octopus-form').unbind('submit').bind('submit', form_helper);
 
         }
     });
@@ -121,6 +111,7 @@
                     content = data + $(obj.target).html();
                     break;
                 case "replace":
+                default:
                     content = data;
             }
 
@@ -139,17 +130,32 @@
                 case 'prepend':
                     var elem = $(document.createElement('div')).html(data).hide();
                     $(obj.target).prepend(elem);
-                    $(elem).slideDown("fast", $(this).bindOctopus());
+                    $(elem).slideDown("fast", function(){
+                        $(obj.target).bindOctopus();
+                    });
                     break;
                 case 'append':
                     var elem = $(document.createElement('div')).html(data).hide();
                     $(obj.target).append(elem);
-                    $(elem).slideDown("fast", $(this).bindOctopus());
+                    $(elem).slideDown("fast", function(){
+                        $(obj.target).bindOctopus();
+                    });
+
+                    break;
+                case 'self':
+                    $(obj).fadeOut('fast', function() {
+                        $(obj).html(data).fadeIn('fast', function(){
+                            $(obj.target).bindOctopus();
+                        });
+                        $('title').text(title);
+                    });
                     break;
                 default:
+
                     $(obj.target).fadeOut('fast', function() {
-                        $(this).html(data).fadeIn('fast',
-                                $(this).bindOctopus());
+                        $(this).html(data).fadeIn('fast', function(){
+                            $(obj.target).bindOctopus();
+                        });
                         $('title').text(title);
                     });
             }
@@ -175,11 +181,13 @@
 </head>
 <body>
 <nav>
-    <li>{% a 'home(replace)' '#main' 'home' %}</li>
+    <li>{% a 'home(replace)' 'body' 'home' %}</li>
     <li>{% a 'detail(replace)' '#main' 'detail' 1 title="balls"%}</li>
     <li>{% a 'list(append)' '#main' 'list' insert="append" %}</li>
     <li>{% a 'archive(prepend)' '#main' 'archive' insert="prepend" %}</li>
     <li>{% a 'create' '#main' 'create' insert="append" %}</li>
+    <li>{% a 'update' '#main' 'update' 4 insert="append" %}</li>
+    <li>{% a 'delete' '#main' 'delete' 4 insert="replace" %}</li>
     <li>{% a '404(prepend)' '#main' '/asdfdsf/sdfsa/sf' insert="replace" %}</li>
 
 </nav>

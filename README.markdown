@@ -16,7 +16,11 @@ pages to be loaded or refreshed modularly.
         * [Creating Class Based Views](#creating-class-based-views)
         * [Creating function Based Views](#creating-function-based-views)
     * [Template Tags](#template-tags)
-    * [Manually Creating Links](#manually-creating-links)
+        * [a (links)](#a)
+        * [form](#form)
+    * [Manually Creating Elements](#manually-creating-elements)
+        * [Creating Links](#creating-links)
+        * [Creating forms](#creating-forms)
     * [Creating Templates](#creating-templates)
 * [Configuration](#configuration)
 * [Todo](#todo)
@@ -173,8 +177,8 @@ There's just two steps:
 
 #### Creating Class-Based Views ####
 
-Generic views have been created for the detail, list, and time-based views 
-following the naming convention of taking `Octopus` onto existing view 
+Generic views have been created for the detail, list, time-based, and update 
+views following the naming convention of tacking `Octopus` onto existing view 
 names: `Octopus<OriginalViewName>`.  If that doesn't make sense, here's 
 an explicit list of the available views with their 
 respective counter parts:
@@ -190,6 +194,10 @@ respective counter parts:
 | OctopusWeekArchiveView  | WeekArchiveView  |
 | OctopusMonthArchiveView | MonthArchiveView |
 | OctopusYearArchiveView  | YearArchiveView  |
+| OctopusCreateView       | CreateView       |
+| OctopusUpdateView       | UpdateView       |
+| OctopusDeleteView       | DeleteView       |
+| OctopusFormView         | FormView         |
 
 You use these just as you would the normal CBV's.  The only difference is that 
 You also need to define a `fragment_name` in addition to the `template_name` 
@@ -214,8 +222,8 @@ then your fragment template should be called
     yourapp/yourmodel_detail_fragment.html
 
 
-No other methods are enabled by default besides GET, so you will still have 
-to define any other methods you need.
+**If you are using the update views, you should be sure your `success_url` also 
+returns a template fragment**
 
 
 #### Creating Function-Based Views
@@ -233,27 +241,28 @@ The only caveat is to wrap your template definition in an `is_ajax()` method:
 
 #### Using the AjaxResponseMixin with existing views ####
 
-**this is untested**
 
-This should work if you explicitly set your `template_name` and `fragment_name`, 
-but like I said, I haven't tested this.  I just thought about mentioning it at 
-the last minute, so proceed at your own risk.
+You can convert your existing CBV's into OctopusViews like so:
 
     from octopus.views import AjaxResponseMixin 
     
     class YourView(AjaxResponseMixin, YourCustomBaseView):
-        ...
+        parent = YourCustomBaseView
         template_name = "weeewoo.html"
         fragment_name = "weeedoo_fragment.html"
         ...
         
+`parent` is defined so get_template_names() can be called in case something 
+ goes wrong.
 
 ### Template Tags ###
+
+#### a ####
 
 Only the first three arguments are requried, but in your template, you would 
 build a full link like so: 
 
-    {% load a %}
+    {% load tentacles %}
     
     {% a "Link Text" "#container" "detail" object.id method="post" insert="prepend" id="cantelope" classes="inline-block article" title="Manatee killed by Cantelope" %}
     
@@ -284,8 +293,12 @@ pass a hard-coded url.
     **Default** `get`
     
     * **insert**: how the incoming text will be inserted  
-      **values**: `replace`, `prepend`, `append`   
-      **Default** `replace`
+      **values**: `replace`, `prepend`, `append`, `self`   
+      **Default**: `replace`  
+      **Note**: `self` is similar to `replace`, but rather than overwriting 
+        everything in the entire node, `self` replaces just the object in 
+        question.  This is particularly useful for editing forms.
+      
     
     * **classes**: a string of class names.  
       **pass the names, rather than the selectors**: i.e., "class1, class2" rather than ".class1, .class2"   
@@ -295,9 +308,47 @@ pass a hard-coded url.
       **Default**: None
 
     * **title**: Text for the `<title>` node.  
-    **Default**: None
- 
-### Manually Creating Links
+      **Default**: None
+    
+#### form ####
+
+The syntax is similar to the link tag:
+
+    {% load tentacles %}
+    
+    {% form "Button Text" form_instance request.path method="get" classes="monkeypus" id="create" insert="append" target="footer" title="Milksteak for Champions" %}
+
+
+A couple things to note.
+
+1. the second argument passed to the form tag is an instance of a form object
+
+2. `target` becomes a kwarg because `insert=self` is more useful for forms and 
+  it supercedes anything defined by target. `target` can still be used as long 
+  as `insert` is redefined to be anything other than `self`
+
+
+3. Like "Link Text" above, "Button Text" will be the text on the submit button
+
+4. `request.path` is passed to `url_name`.  You can still pass named urls and 
+their arguments to the tag if you want to, but when dealing with the generic 
+edit views, if you use `request.path` you won't have to create individual forms 
+for each the views.  **make sure you include 
+`'django.core.context_processors.request',` in `TEMPLATE_CONTEXT_PROCESSORS`**
+
+The rest of the arguments remain the same.  The only difference are couple of 
+the default values:
+
+* **Kwargs**
+    * **method**: Default: `post`
+    
+    * **replace**: Default `self`
+    
+**Note: the template uses form.as_p() by default**
+
+### Manually Creating Elements
+
+#### Creating Links ####
 
 The template tag only creates standard inline text links. If you want to 
 create a link on an image or need some extra data attributes, you will have to 
@@ -311,26 +362,39 @@ But it's not hard. The only required attributes are:
 
 * `class="octopus-link ..."`
 
-Then you can pass the kwargs as defined in [Template Tags](#template-tags)
+Then you can pass the kwargs as defined in [Template Tags](#a)
 
+#### Creating Forms ####
+
+If you want to render something besides form.as_p(), you'll have to create your 
+own form.  Beside the standard required attributes for forms, the only thing 
+unique to octopus is to add a hook for the javascript:
+ 
+    class="octopus-form ..."
+
+This is what the 
+
+Then you can pass the kwargs as defined in [Template Tags](#a)
 
 ### Creating templates ###
 
-A very basic template schema might look something like this:
+A simple template schema that uses both links and forms might look something 
+like this:
 
-Full template:
+Base template:
 
     {% load static %}
-    {% load a %}
+    {% load tentacles %}
     <!doctype html>
     <html>
     <head>
         <title>Document</title>
     </head>
     <body>
-        {% a 'click me' 'main' 'list' %}
+        {% a 'create object' 'main' 'create' %}
         <main>
-            {% include "template_fragment.html" %}
+            {% block content %}
+            {% endblock content %}
         </main>
         ...
         <footer>
@@ -340,9 +404,18 @@ Full template:
     </body>
     </html>
     
-template_fragment.html:  
+model_form.html:
 
-    <h1>Hello World</h1>
+    {% extends "base.html" %}
+    {% block content %}
+        {% include "model_form_fragment.html" %}
+    {% endblock %}
+
+model_form_fragment.html
+
+    {% load tentacles %}
+    
+    {% form 'Submit' form_instance request.path %}
 
 ## Configuration ##
 

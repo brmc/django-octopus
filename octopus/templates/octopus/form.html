@@ -1,0 +1,5 @@
+<form {% if id %}id="{{ id }}" {% endif %}class="octopus-form{% if classes %} {{ classes }}{% endif %}" action="{{ href }}" method="{{ method }}" insert="{{ insert }}"{% if target %} target="{{ target }}"{% endif %}>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="{{ text }}" />
+</form>

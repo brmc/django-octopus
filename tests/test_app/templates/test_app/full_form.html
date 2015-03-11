@@ -1,0 +1,5 @@
+<form id="id" class="octopus-form class" action="/" method="get" insert="append" target="#main">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="submit" />
+</form>

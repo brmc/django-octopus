@@ -1,11 +1,13 @@
 from collections import OrderedDict
+from django.forms.models import ModelForm
 from django.template.loader import render_to_string
-from django.test import TestCase, RequestFactory, Client
-from octopus.templatetags.a import a
+from django.test import TestCase
+from octopus.templatetags.tentacles import a
 from test_app.models import TestModel
+from tests.octopus.templatetags.tentacles import form
 
 
-class TagsTest(TestCase):
+class TestA(TestCase):
     def setUp(self):
         self.m = TestModel()
         self.m.save()
@@ -59,6 +61,7 @@ class TagsTest(TestCase):
                 'text': 'text'
             })
         )
+
     def test_a_no_arg(self):
         self.assertEqual(
             a(
@@ -73,11 +76,11 @@ class TagsTest(TestCase):
                 'id': 'man',
                 'target': 'target',
                 'insert': 'replace',
-                'method':'post',
+                'method': 'post',
                 'classes': 'poop',
                 'href': '/list/',
                 'title': "title",
-                'text':'text'
+                'text': 'text'
             })
         )
 
@@ -93,8 +96,11 @@ class TagsTest(TestCase):
             title="title"
         )
 
-        self.assertEqual(render_to_string('octopus/link.html', context),
-            u'<a id="man" target="target" insert="append" method="get" class="octopus-link poop" href="/detail/%d" title="title">text</a>' % self.id
+        self.assertEqual(
+            render_to_string('octopus/link.html', context),
+            u'<a id="man" target="target" insert="append" method="get" '\
+            'class="octopus-link poop" href="/detail/%d" '\
+            'title="title">text</a>' % self.id
         )
 
     def test_render_template_nokwargs(self):
@@ -104,8 +110,44 @@ class TagsTest(TestCase):
             "detail",
             self.id,
             insert="prepend",
-         )
-
-        self.assertEqual(render_to_string('octopus/link.html', context),
-            u'<a target="target" insert="prepend" method="get" class="octopus-link" href="/detail/%d" title="None">text</a>' % self.id
         )
+
+        self.assertEqual(
+            render_to_string('octopus/link.html', context),
+            u'<a target="target" insert="prepend" method="get" ' \
+            'class="octopus-link" href="/detail/%d" title="None">text</a>'
+            % self.id)
+
+
+class TestForm(TestCase):
+
+    class MForm(ModelForm):
+        class Meta:
+            model = TestModel
+
+    def test_render_minimum_form(self):
+        context = form(
+            "submit",
+            self.MForm,
+            "/"
+
+        )
+        self.assertEqual(
+            render_to_string('octopus/form.html', context),
+            render_to_string('test_app/form.html', {'form': self.MForm}),)
+
+    def test_render_full_form(self):
+
+        context = form(
+            "submit",
+            self.MForm,
+            "/",
+            method="get",
+            insert="append",
+            target="#main",
+            id="id",
+            classes="class"
+        )
+        self.assertEqual(render_to_string('octopus/form.html', context),
+                         render_to_string(
+                             'test_app/full_form.html', {'form': self.MForm}),)

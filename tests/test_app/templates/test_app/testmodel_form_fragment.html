@@ -1,7 +1,4 @@
+{% load tentacles %}
 {% block content %}
-    <form class="octopus-form" action="." method="post" target="#main">
-    {% csrf_token %}
-        {{ form.as_p }}
-    <button class="" type="submit">Submit</button>
-    </form>
+    {% form form 'create' request.path method="post" insert="self" %}
 {% endblock %}
