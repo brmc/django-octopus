@@ -50,7 +50,8 @@ def create_html_tag(text, target, url_name, *url_args, **kwargs):
 
     if insert.lower() not in ['replace', 'append', 'prepend', 'self']:
         raise ImproperlyConfigured("%s is not a valid value for insert. It "
-                                   "should be: replace, append, or prepend.")
+                                   "should be: replace, append, prepend, or self."
+                                    % insert)
 
     return OrderedDict({
         'id': id_,

@@ -44,10 +44,25 @@ class AjaxResponseMixin(object):
         return [self.template_name, "%s%s"
                 % (self.template_name, self.template_name_suffix)]
 
+
+class OctopusTemplateView(TemplateView):
+    fragment_name = None
+    fragment_suffix = '_fragment'
+
+    def get_template_names(self):
+        if self.request.is_ajax():
+            print self.request.path
+            if self.fragment_name is not None:
+                self.template_name = self.fragment_name
+            else:
+                self.template_name = self.template_name.replace(
+                    ".", self.fragment_suffix + ".")
+
+        return [self.template_name, ]
+
 views = (DetailView, ListView, DateDetailView, TodayArchiveView,
          DayArchiveView, WeekArchiveView, MonthArchiveView, YearArchiveView,
-         ArchiveIndexView, FormView, CreateView, UpdateView, DeleteView,
-         TemplateView, View)
+         ArchiveIndexView, FormView, CreateView, UpdateView, DeleteView, View)
 
 
 # Inject AjaxResponseMixin into each view and tack "Octopus" on to the
