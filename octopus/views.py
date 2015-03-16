@@ -51,7 +51,6 @@ class OctopusTemplateView(TemplateView):
 
     def get_template_names(self):
         if self.request.is_ajax():
-            print self.request.path
             if self.fragment_name is not None:
                 self.template_name = self.fragment_name
             else:

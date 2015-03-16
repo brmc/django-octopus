@@ -32,7 +32,8 @@ class TestA(TestCase):
                 'classes': 'poop',
                 'href': '/detail/1',
                 'title': 'title',
-                'text': 'text'
+                'text': 'text',
+                'multi': False
             })
         )
 
@@ -58,7 +59,8 @@ class TestA(TestCase):
                 'method': 'get',
                 'href': '/multi/1/a',
                 'title': 'title',
-                'text': 'text'
+                'text': 'text',
+                'multi': False
             })
         )
 
@@ -80,7 +82,8 @@ class TestA(TestCase):
                 'classes': 'poop',
                 'href': '/list/',
                 'title': "title",
-                'text': 'text'
+                'text': 'text',
+                'multi': False
             })
         )
 
@@ -100,7 +103,7 @@ class TestA(TestCase):
             render_to_string('octopus/link.html', context),
             u'<a id="man" target="target" insert="append" method="get" '\
             'class="octopus-link poop" href="/detail/%d" '\
-            'title="title">text</a>' % self.id
+            'title="title" multi="False">text</a>' % self.id
         )
 
     def test_render_template_nokwargs(self):
@@ -115,7 +118,7 @@ class TestA(TestCase):
         self.assertEqual(
             render_to_string('octopus/link.html', context),
             u'<a target="target" insert="prepend" method="get" ' \
-            'class="octopus-link" href="/detail/%d" title="None">text</a>'
+            'class="octopus-link" href="/detail/%d" title="None" multi="False">text</a>'
             % self.id)
 
 
