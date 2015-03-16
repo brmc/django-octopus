@@ -89,6 +89,15 @@ parameters and their default values.
 
 ## Changelog (Recent Changes)
 
+## v0.2.1
+
+## Bug fixes
+
+* Corrected error message from ImproperlyConfigured `tentacles.py` to display 
+ the incorrect value
+ 
+* JS files weren't updating the title.  
+
 ## v0.2
 
 ### Changes
@@ -465,6 +474,9 @@ The determines whether hard-coded links may be passed to the template tag
 **Default**: `True`
 
 ## Todo ##
+
+ * Create `fragment` template tag so new templates dont necessarily have to be 
+ created.
 
  * Write some tests for AjaxResponseMixin
  

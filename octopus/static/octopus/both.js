@@ -79,10 +79,10 @@ $(function() {
         if (href == location.href && $(obj).attr('multi') == "False")
             return;
 
-        var title = new String;  var content = new String;
+        var content = new String;
+        var title = obj.title;
         var error_content;  // container for error messages
         var state = {};     // Dict to pass to pushState
-
         dataArray = dataArray || {};
 
         $.ajax({
@@ -116,7 +116,6 @@ $(function() {
             };
 
             var elem = $.parseHTML(data);
-            $(elem).addClass('octopus-'+insert);
             switch(insert){
                 case 'prepend':
                     $(elem).hide();
@@ -140,7 +139,7 @@ $(function() {
                         $(obj).html(elem).fadeIn('fast', function(){
                             $(obj.target).bindOctopus();
                         });
-                        $('title').text(title);
+
                     });
                     break;
                 default:
@@ -149,9 +148,10 @@ $(function() {
                         $(this).html(elem).fadeIn('fast', function(){
                             $(obj.target).bindOctopus();
                         });
-                        $('title').text(title);
                     });
+
             }
+            $('title').text(title);
             window.history.pushState(state, "", href);
 
         });
