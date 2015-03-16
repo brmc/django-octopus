@@ -116,6 +116,7 @@ $(function() {
             };
 
             var elem = $.parseHTML(data);
+            $(elem).addClass('octopus-'+insert);
             switch(insert){
                 case 'prepend':
                     $(elem).hide();

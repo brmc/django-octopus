@@ -8,13 +8,13 @@ $(function(){
     });
 
     function link_helper(e){
-       e.preventDefault();
+        e.preventDefault();
         var insert = $(this).attr('insert');
         request(this, insert, this.href);
     }
 
     function form_helper(e){
-       e.preventDefault();
+        e.preventDefault();
         var data = $(this).serializeArray();
         request(this, $(this).attr('insert'), this.action, data);
     }
@@ -68,17 +68,21 @@ $(function(){
                 container: content
             };
 
+            var elem = $.parseHTML(data);
+            $(elem).addClass('octopus-'+insert);
             switch(insert){
                 case 'prepend':
-                    var elem = $(document.createElement('div')).html(data).hide();
+                    $(elem).hide();
                     $(obj.target).prepend(elem);
+
                     $(elem).slideDown("fast", function(){
                         $(obj.target).bindOctopus();
                     });
                     break;
                 case 'append':
-                    var elem = $(document.createElement('div')).html(data).hide();
+                    $(elem).hide();
                     $(obj.target).append(elem);
+
                     $(elem).slideDown("fast", function(){
                         $(obj.target).bindOctopus();
                     });
@@ -86,7 +90,7 @@ $(function(){
                     break;
                 case 'self':
                     $(obj).fadeOut('fast', function() {
-                        $(obj).html(data).fadeIn('fast', function(){
+                        $(obj).html(elem).fadeIn('fast', function(){
                             $(obj.target).bindOctopus();
                         });
                         $('title').text(title);
@@ -95,7 +99,7 @@ $(function(){
                 default:
 
                     $(obj.target).fadeOut('fast', function() {
-                        $(this).html(data).fadeIn('fast', function(){
+                        $(this).html(elem).fadeIn('fast', function(){
                             $(obj.target).bindOctopus();
                         });
                         $('title').text(title);

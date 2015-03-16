@@ -7,6 +7,7 @@ pages to be loaded or refreshed modularly.
 
 * [Quick start](#quick-start)
 * [Changelog (Recent changes only)](#changelog-recent-changes)
+  * [v0.2](#V02)
   * [v0.1](#v01)
 * [How does it work?](#how-does-it-work)
 * [Requirements](#requirements)
@@ -28,7 +29,10 @@ pages to be loaded or refreshed modularly.
 
 ## Quick start ##
 
-1\. `pip install django-octopus`
+1\. The pypi repo is currecntly out-of-date, so for now follow these 
+instructions  
+
+`pip install pip+https://github.com/brmc/django-octopus.git`
 
 2\. `settings.py`
 
@@ -92,6 +96,35 @@ parameters and their default values.
 * `action` attribute in the template tags was changed to `insert` to avoid
 conflicts with form attributes.  This is NOT backwards compatible.
 
+* The div that wraps elements that were prepended or appended has been removed
+
+* Changed the name of the file in the template tag from `a.py` to
+`tentacles.py`. `{% load a %}` is deprecated.  Change it to
+`{% load tentacles %}`
+
+
+### Features
+
+* Create-, Update-, and DeleteViews support added and tested.
+
+* New template tag to create forms
+
+* Added `self` to allowed `insert` methods.  This is similar to `replace` but
+in case several nodes have been appended or prepended, it only replaces the
+exact node in question rather than overwriting the contents of the entire
+`target`.  This allows for creating, editing, or deleting multiple models in
+place and saving them individually. If `insert="self"` is set, `target` is
+ignored.
+
+* `multi` attribute added to template tags to prevent or allow multiple clicks 
+on a link.  
+    **Default: False**
+
+* When elements are loaded they are given a class corresponding to their 
+insertion method so you can hook into them if you wish.   
+**Naming schema** octopus-<insert method>, e.g. `octopus-append`
+
+
 ### v0.1
 
 #### Features
@@ -103,6 +136,7 @@ conflicts with form attributes.  This is NOT backwards compatible.
 * A mixin(AjaxResponseMixin) to be used on pre-existing CBVs
 
 * A template tag to generate octopus-compatible links
+
 
 ## Requirements ##
 
@@ -126,9 +160,10 @@ back/forward functionality.
 
 ## Installation ##
 
-1\. install octopus:
+1\. The pypi repo is currecntly out-of-date, so for now follow these 
+instructions  
 
-    pip install django-octopus
+    pip install pip+https://github.com/brmc/django-octopus.git
     
 2\. Add to INSTALLED_APPS:
 
