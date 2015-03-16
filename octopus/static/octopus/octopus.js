@@ -1,5 +1,5 @@
 $(function(){
- // Sets the initial state in the browser, so back/forward will
+    // Sets the initial state in the browser, so back/forward will
     // work with the landing site
     history.replaceState({
         title: window.location.pathname,
@@ -28,6 +28,9 @@ $(function(){
     });
 
     function request(obj, insert, href, dataArray){
+        // Prevent undesirable multiple clicks on a link/element
+        if (href == location.href && $(obj).attr('multi') == "False")
+            return;
 
         var title = new String;  var content = new String;
         var error_content;  // container for error messages

@@ -46,7 +46,7 @@ $(function() {
             }
         }
     });
-  // Sets the initial state in the browser, so back/forward will
+    // Sets the initial state in the browser, so back/forward will
     // work with the landing site
     history.replaceState({
         title: window.location.pathname,
@@ -55,13 +55,13 @@ $(function() {
     });
 
     function link_helper(e){
-       e.preventDefault();
+        e.preventDefault();
         var insert = $(this).attr('insert');
         request(this, insert, this.href);
     }
 
     function form_helper(e){
-       e.preventDefault();
+        e.preventDefault();
         var data = $(this).serializeArray();
         request(this, $(this).attr('insert'), this.action, data);
     }
@@ -75,6 +75,9 @@ $(function() {
     });
 
     function request(obj, insert, href, dataArray){
+        // Prevent undesirable multiple clicks on a link/element
+        if (href == location.href && $(obj).attr('multi') == "False")
+            return;
 
         var title = new String;  var content = new String;
         var error_content;  // container for error messages
@@ -112,17 +115,20 @@ $(function() {
                 container: content
             };
 
+            var elem = $.parseHTML(data);
             switch(insert){
                 case 'prepend':
-                    var elem = $(document.createElement('div')).html(data).hide();
+                    $(elem).hide();
                     $(obj.target).prepend(elem);
+
                     $(elem).slideDown("fast", function(){
                         $(obj.target).bindOctopus();
                     });
                     break;
                 case 'append':
-                    var elem = $(document.createElement('div')).html(data).hide();
+                    $(elem).hide();
                     $(obj.target).append(elem);
+
                     $(elem).slideDown("fast", function(){
                         $(obj.target).bindOctopus();
                     });
@@ -130,7 +136,7 @@ $(function() {
                     break;
                 case 'self':
                     $(obj).fadeOut('fast', function() {
-                        $(obj).html(data).fadeIn('fast', function(){
+                        $(obj).html(elem).fadeIn('fast', function(){
                             $(obj.target).bindOctopus();
                         });
                         $('title').text(title);
@@ -139,7 +145,7 @@ $(function() {
                 default:
 
                     $(obj.target).fadeOut('fast', function() {
-                        $(this).html(data).fadeIn('fast', function(){
+                        $(this).html(elem).fadeIn('fast', function(){
                             $(obj.target).bindOctopus();
                         });
                         $('title').text(title);
