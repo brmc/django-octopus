@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.3
+
+### Bug fixes
+
+* fixed bug in the javascript that prevented replaceState() from being called
+in FireFox
+
+### Changes
+
+* a `title` is now required to engaged the forward/back behavior
+
+* `multi` default value for forms changed to `True`
+
+* the behavior of `self` was modified to fully replace the containing element,
+  so be sure a single node encapsulates your template fragments if using
+  `self`
+
 ## v0.2
 
 ### Changes

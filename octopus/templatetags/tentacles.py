@@ -91,11 +91,23 @@ def form(text, form, url_name, *url_args, **kwargs):
     """
 
     # Default values for forms should differ from regular links
-    kwargs['method'], kwargs['insert'] = map(kwargs.get, ['method', 'insert'],
-                                                         ['post',   'self'])
+    kwargs['method'], kwargs['insert'], kwargs['multi'] = \
+        map(kwargs.get, ['method', 'insert', 'multi'],
+                        ['post',   'self',   'True'])
 
     context = create_html_tag(text, kwargs.pop('target', None),
                               url_name, *url_args, **kwargs)
     context['form'] = form
 
     return context
+
+
+
+@register.simple_tag
+def fragment():
+    return settings.START_TAG
+
+
+@register.simple_tag
+def endfragment():
+    return settings.END_TAG

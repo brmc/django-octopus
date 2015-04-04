@@ -11,6 +11,9 @@ TRUE_SETTINGS = [
 
 # FALSE_SETTINGS = []
 
+START_TAG = getattr(settings, "OCTOPUS_START_TAG", "<<<OCTOPUSDESTROYER!!!>>>")
+END_TAG = getattr(settings, "OCTOPUS_END_TAG", START_TAG)
+
 for setting in TRUE_SETTINGS:
     locals()[setting] = getattr(settings, "OCTOPUS_%s" % setting, True)
 

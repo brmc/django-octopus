@@ -3,10 +3,18 @@
 Octopus is a lightweight AJAX pull framework for django, allowing
 pages to be loaded or refreshed modularly.
 
+[Click here to see a full-featured demo.](http://mcclure.webfaction.com).  The 
+demo is still a bit rough around the edges, and has only been tested in Chrome 
+and FireFox.  Chrome looks best because there's some wonky problem with the 
+menu transitioons on FireFox.  The responsiveness is lazy and violates 
+accessibility, and there is no mobile version. But otherwise, it looks and 
+works great!! :D
+
 ## Contents
 
 * [Quick start](#quick-start)
 * [Changelog (Recent changes only)](#changelog-recent-changes)
+  * [v0.3](#V03)
   * [v0.2](#V02)
   * [v0.1](#v01)
 * [How does it work?](#how-does-it-work)
@@ -29,10 +37,7 @@ pages to be loaded or refreshed modularly.
 
 ## Quick start ##
 
-1\. The pypi repo is currecntly out-of-date, so for now follow these 
-instructions  
-
-`pip install pip+https://github.com/brmc/django-octopus.git`
+1\. `pip install django-octopus`
 
 2\. `settings.py`
 
@@ -41,7 +46,7 @@ instructions
         'octopus',
         ...
     )
-    
+  
 You may need to restart your development server to detect the template tags.  
 
 3\. Add javascript:
@@ -88,6 +93,24 @@ parameters and their default values.
 
 
 ## Changelog (Recent Changes)
+
+## v0.3
+
+### Bug fixes
+
+* fixed bug in the javascript that prevented replaceState() from being called
+in FireFox
+
+### Changes
+
+* a `title` is now required to engaged the forward/back behavior
+
+* `multi` default value for forms changed to `True`
+
+* the behavior of `self` was modified to fully replace the containing element,
+  so be sure a single node encapsulates your template fragments if using
+  `self`
+
 
 ## v0.2.1
 
@@ -169,10 +192,9 @@ back/forward functionality.
 
 ## Installation ##
 
-1\. The pypi repo is currecntly out-of-date, so for now follow these 
-instructions  
+1\. Install Octopus: 
 
-    pip install pip+https://github.com/brmc/django-octopus.git
+    pip install django-octopus
     
 2\. Add to INSTALLED_APPS:
 
@@ -211,11 +233,13 @@ instructions
 
 ## Usage ##
 
-There's just two steps:
+There's just three main steps:
 
 1. Create your views
 
 2. Create your links (with or without the template tag)
+
+3. Create your templates
 
 ### Views ###
 
@@ -229,8 +253,7 @@ respective counter parts:
 
 | Octopus View            |      Django View |
 |-------------------------|------------------|
-| OctopusView             | View             |
-| OctopusTemplateView     | TemplateView
+| OctopusTemplateView     | TemplateView     |
 | OctopusDetailView       | DetailView       |
 | OctopusListView         | ListView         |
 | OctopusArchiveIndexView | ArchiveIndexView |
@@ -319,6 +342,9 @@ the url/path rendered from the url named `detail` passing it the `object.id`
 via a `POST` request. The HTML returned would then be prepended to `#container`, 
 and the document would be give a new title.
 
+**note: to engage the back/forward functionality, be sure to give a title, 
+otherwise the browser state will not be updated**
+
 The order for the template tags are: 
 
 Link text, target element, url name, url arguments, kwargs. 
@@ -353,7 +379,9 @@ pass a hard-coded url.
     * **id**: like above but for the Id.  
       **Default**: None
 
-    * **title**: Text for the `<title>` node.  
+    * **title**: Text for the `<title>` node.  If a title is not given, then 
+        the browser state will not be updated, and forward/ back functionality
+        will not be preserved.
       **Default**: None
     
 #### form ####
@@ -474,6 +502,8 @@ The determines whether hard-coded links may be passed to the template tag
 **Default**: `True`
 
 ## Todo ##
+
+ * Make data-hooks html5 compliant
 
  * Create `fragment` template tag so new templates dont necessarily have to be 
  created.

@@ -16,13 +16,6 @@ __all__ = [
     'OctopusUpdateView', 'OctopusDeleteView', 'OctopusTemplateView',
     'OctopusView']
 
-OctopusDetailView = OctopusListView = OctopusDateDetailView = \
-    OctopusYearArchiveView = OctopusArchiveIndexView = \
-    OctopusDayArchiveView = OctopusWeekArchiveView = \
-    OctopusMonthArchiveView = OctopusTodayArchiveView = OctopusCreateView = \
-    OctopusUpdateView = OctopusDeleteView = object
-
-
 class AjaxResponseMixin(object):
     """ use this to add Octopus functionality to your views
 
@@ -65,7 +58,8 @@ views = (DetailView, ListView, DateDetailView, TodayArchiveView,
 
 
 # Inject AjaxResponseMixin into each view and tack "Octopus" on to the
-# beginning of the class .
+# beginning of the class. As the app matures, these definitions will become
+# explicit, but for now they will be generated on the fly.
 for view in views:
     name = 'Octopus%s' % view.__name__
 

@@ -52,9 +52,12 @@ $(function() {
         title: window.location.pathname,
         target: 'body',
         container: $('body').html()
-    });
+    }, $('title').text(), window.location.pathname);
 
     function link_helper(e){
+        if ($(this).attr('multi') == "False")
+            $(this).disable();
+
         e.preventDefault();
         var insert = $(this).attr('insert');
         request(this, insert, this.href);
@@ -68,9 +71,13 @@ $(function() {
 
     $.fn.extend({
         bindOctopus: function(){
-            $(this).find('.octopus-link').unbind('click').bind('click', link_helper);
-            $(this).find('.octopus-form').unbind('submit').bind('submit', form_helper);
-
+            $(this).find('.octopus-link').unbind('click', link_helper).bind('click', link_helper);
+            $(this).find('.octopus-form').unbind('submit', form_helper).bind('submit', form_helper);
+            return this;
+        },
+        disable: function(){
+            this.css({'pointer-events': 'none'});
+            return this;
         }
     });
 
@@ -80,7 +87,7 @@ $(function() {
             return;
 
         var content = new String;
-        var title = obj.title;
+
         var error_content;  // container for error messages
         var state = {};     // Dict to pass to pushState
         dataArray = dataArray || {};
@@ -90,7 +97,7 @@ $(function() {
             type: $(obj).attr('method'),
             data: dataArray
         }).done(function(data){
-            title = obj.title;
+            title = $(obj).attr('title');
 
             switch(insert){
                 case "append":
@@ -116,6 +123,7 @@ $(function() {
             };
 
             var elem = $.parseHTML(data);
+            elem = $(elem).addClass("octopus-"+insert);
             switch(insert){
                 case 'prepend':
                     $(elem).hide();
@@ -135,11 +143,16 @@ $(function() {
 
                     break;
                 case 'self':
+                    if($(obj).hasClass('octopus-link')){
+                            obj = $(obj).parent();
+                    }
                     $(obj).fadeOut('fast', function() {
-                        $(obj).html(elem).fadeIn('fast', function(){
-                            $(obj.target).bindOctopus();
+                        this.outerHTML = data;
+                        $(this).fadeIn('fast', function(){
+                            $('body').bindOctopus();
                         });
 
+                        state['target'] = obj;
                     });
                     break;
                 default:
@@ -151,8 +164,22 @@ $(function() {
                     });
 
             }
-            $('title').text(title);
-            window.history.pushState(state, "", href);
+            if (title != "None" && title != undefined){
+                $('title').text(title);
+
+                try{
+                    window.history.pushState(state, "", href);
+                }
+                catch(DataCloneError){
+                    state = {
+                        title: 'something went wrong, so we pushed everything',
+                        target: 'body',
+                        container: $('body').html()
+                    };
+                    window.history.pushState(state, "", href);
+                }
+            }
+
 
         });
     }
@@ -168,5 +195,6 @@ $(function() {
             $(state.target).html(state.container );
             $('title').text(state.title);
         }
+        $('body').bindOctopus();
     });
 });
