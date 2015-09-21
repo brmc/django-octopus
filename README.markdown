@@ -3,7 +3,7 @@
 Octopus is a lightweight AJAX pull framework for django, allowing
 pages to be loaded or refreshed modularly.
 
-[Click here to see a full-featured demo.](http://mcclure.webfactional.com).  The 
+[Click here to see a full-featured demo.](http://mcclure.pw/demo).  The 
 demo is still a bit rough around the edges, and has only been tested in Chrome 
 and FireFox.  Chrome looks best because there's some wonky problem with the 
 menu transitioons on FireFox.  The responsiveness is lazy and violates 
