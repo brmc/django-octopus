@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/brmc/django-octopus.svg?branch=master)](https://travis-ci.org/brmc/django-octopus)
+
 # **django-octopus** #
 
 Octopus is a lightweight AJAX pull framework for django, allowing
