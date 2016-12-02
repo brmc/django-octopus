@@ -4,8 +4,13 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
+addons:
+  apt:
+    sources:
+      - deadsnakes
+    packages:
+      - python3.5
 install:
-  - apt-get install python3.5
   - pip install tox
 script:
   - tox
