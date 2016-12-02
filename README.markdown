@@ -1,5 +1,3 @@
-# **This package is not currently being maintained.  The last-known compatible version of django was 1.7.  Proceed accordingly.**
-
 # **django-octopus** #
 
 Octopus is a lightweight AJAX pull framework for django, allowing
@@ -16,6 +14,7 @@ works great!! :D
 
 * [Quick start](#quick-start)
 * [Changelog (Recent changes only)](#changelog-recent-changes)
+  * [v0.3.1](#V031)
   * [v0.3](#V03)
   * [v0.2](#V02)
   * [v0.1](#v01)
@@ -95,6 +94,10 @@ parameters and their default values.
 
 
 ## Changelog (Recent Changes)
+
+## v0.3.1
+
+* officially added support for django 1.8, 1.9, and 1.10 and python 3.5
 
 ## v0.3
 

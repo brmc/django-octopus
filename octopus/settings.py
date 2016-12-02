@@ -4,18 +4,14 @@
 from django.conf import settings
 
 
-TRUE_SETTINGS = [
-    'ALLOW_MANUAL',     # Allows manual paths and potentially external URLS
-    'FAIL_SILENTLY',    # Currently not being used
-]
-
-# FALSE_SETTINGS = []
-
 START_TAG = getattr(settings, "OCTOPUS_START_TAG", "<<<OCTOPUSDESTROYER!!!>>>")
 END_TAG = getattr(settings, "OCTOPUS_END_TAG", START_TAG)
 
-for setting in TRUE_SETTINGS:
-    locals()[setting] = getattr(settings, "OCTOPUS_%s" % setting, True)
+# Allows manual paths and potentially external URLS
+ALLOW_MANUAL = getattr(settings, "OCTOPUS_ALLOW_MANUAL", True)
+
+# Currently not being used
+FAIL_SILENTLY = getattr(settings, "OCTOPUS_FAIL_SILENTLY", True)
 
 
-__all__ = TRUE_SETTINGS
+__all__ = (ALLOW_MANUAL, )

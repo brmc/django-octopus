@@ -2,7 +2,10 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir))
+path = os.path.join(os.path.dirname(__file__), os.path.pardir)
+
+if path not in sys.path:
+    sys.path.insert(0, path)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")

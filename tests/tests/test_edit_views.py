@@ -1,7 +1,7 @@
 from datetime import date
 from django.test import RequestFactory
 from django.test.testcases import TestCase
-from test_app.models import TestModel
+from ..test_app.models import TestModel
 
 
 class TestEditViews(TestCase):
