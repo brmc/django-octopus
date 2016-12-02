@@ -1,3 +1,5 @@
+# **This package is not currently being maintained.  The last-known compatible version of django was 1.7.  Proceed accordingly.**
+
 # **django-octopus** #
 
 Octopus is a lightweight AJAX pull framework for django, allowing
