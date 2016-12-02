@@ -1,7 +1,6 @@
 language: python
 python:
   - "2.7"
-  - "3.3"
   - "3.4"
   - "3.5"
 addons:
@@ -15,11 +14,6 @@ install:
 script:
   - tox
 env:
-  - TOXENV=py27
-  - TOXENV=py34
-  - TOXENV=py35
-  - TOXENV=django16
-  - TOXENV=django17
   - TOXENV=django18
   - TOXENV=django19
   - TOXENV=django110

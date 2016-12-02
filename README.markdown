@@ -98,6 +98,7 @@ parameters and their default values.
 ## v0.3.1
 
 * officially added support for django 1.8, 1.9, and 1.10 and python 3.5
+* removed support for EOL versions of django
 
 ## v0.3
 
