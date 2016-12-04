@@ -14,6 +14,7 @@ works great!! :D
 
 * [Quick start](#quick-start)
 * [Changelog (Recent changes only)](#changelog-recent-changes)
+  * [v0.3.2](#V032)
   * [v0.3.1](#V031)
   * [v0.3](#V03)
   * [v0.2](#V02)
@@ -94,6 +95,10 @@ parameters and their default values.
 
 
 ## Changelog (Recent Changes)
+
+## v0.3.1
+
+* removed deprecated template tag
 
 ## v0.3.1
 
