@@ -10,8 +10,8 @@
     "build": "browserify js/octopus.js -o octopus/static/octopus/octopus.js",
     "build-test": "python tests/manage.py collectstatic -i admin --no-input",
     "build-all": "npm run build; npm run build-test",
-    "build-jquery": "jquery-builder --exclude deprecated,dimensions,offset,wrap -m -v '2.1.1' > js/minimum-jquery-2.1.1.js",
-    "install-jquery": "cp js/minimum-jquery* octopus/static/octopus/"
+    "build-jquery": "./bin/build-jquery.sh",
+    "install-jquery": "cp js/custom-jquery* octopus/static/octopus/"
   },
   "repository": {
     "type": "git",

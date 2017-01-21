@@ -57,7 +57,7 @@ You may need to restart your development server to detect the template tags.
 
 3\. Add javascript:
 
-    <script src="{% static 'octopus/minimum-jquery-2.1.1.js' %}"></script>
+    <script src="{% static 'octopus/custom-jquery.js' %}"></script>
     <script src="{% static 'octopus/octopus.js' %}"></script>
 
 4\. Define your views:
@@ -242,7 +242,7 @@ components of jQuery. It is built off of v2.1.1.
 
 jQuery should be loaded before `octopus.js`
 
-    <script src="{% static 'octopus/minimum-jquery-2.1.1.js' %}"></script>
+    <script src="{% static 'octopus/custom-jquery.js' %}"></script>
     <script src="{% static 'octopus/octopus.js' %}"></script>
    
 

@@ -135,6 +135,25 @@ $(function(){
                 !(/^(\/\/|http:|https:).*/.test(url));
         }
 
+        /**
+         * @param {string} name
+         * @return {string|null}
+         */
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
         var insertContent = function(data){
             data = !errorContent ? data : errorContent;
 
@@ -211,7 +230,9 @@ $(function(){
                 return;
             }
 
-            var csrftoken = $.cookie('csrftoken');
+            $(this).fadeTo('.5');
+
+            var csrftoken = getCookie('csrftoken');
 
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
