@@ -9,6 +9,7 @@
 
 * Added javascript build commands: see `BUILD_INSTRUCTIONS.md` for details
 * Includes custom build of jQuery to use only the required components
+* While loading, the target element fades to 30%
 * Trivial javascript improvements
 
 ## v0.3.2

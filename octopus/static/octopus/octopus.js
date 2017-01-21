@@ -37,15 +37,15 @@ $(function(){
 
     $.fn.extend({
         bindOctopus: function(){
-            $(this).find('.octopus-link').unbind('click', prepareLinkRequest).bind('click', prepareLinkRequest);
-            $(this).find('.octopus-form').unbind('submit', prepareFormRequest).bind('submit', prepareFormRequest);
+            $(this).off('click', '.octopus-link', prepareLinkRequest)
+                .on('click', '.octopus-link', prepareLinkRequest);
+            $(this).off('submit', '.octopus-form',  prepareFormRequest)
+                .on('submit', '.octopus-form', prepareFormRequest);
             return this;
         },
         disable: function(){
             this.css({'pointer-events': 'none'});
-            $(this).unbind('click')
-                .removeClass('octopus-link')
-                .removeClass('octopus-form');
+            $(this).off('click', 'octopus-link').removeClass('octopus-link')
             return this;
         }
     });
@@ -136,6 +136,25 @@ $(function(){
                 !(/^(\/\/|http:|https:).*/.test(url));
         }
 
+        /**
+         * @param {string} name
+         * @return {string|null}
+         */
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
         var insertContent = function(data){
             data = !errorContent ? data : errorContent;
 
@@ -204,6 +223,7 @@ $(function(){
                     window.history.pushState(browserState, "", href);
                 }
             }
+            $(sourceElement.target).fadeTo(100, 1);
         };
 
         this.submit = function() {
@@ -212,7 +232,7 @@ $(function(){
                 return;
             }
 
-            var csrftoken = $.cookie('csrftoken');
+            var csrftoken = getCookie('csrftoken');
 
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
@@ -222,6 +242,7 @@ $(function(){
                 }
             });
 
+            $(sourceElement.target).fadeTo(100, .2);
 
             $.ajax({
                 url: href,

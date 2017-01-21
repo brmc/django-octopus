@@ -3,7 +3,7 @@ from octopus.views import OctopusDetailView, OctopusListView, \
     OctopusDateDetailView, OctopusYearArchiveView, OctopusArchiveIndexView, \
     OctopusDayArchiveView, OctopusWeekArchiveView, OctopusMonthArchiveView, \
     OctopusTodayArchiveView, OctopusCreateView, OctopusUpdateView, \
-    OctopusDeleteView
+    OctopusDeleteView, OctopusTemplateView
 from test_app.models import TestModel
 
 
@@ -14,15 +14,13 @@ __all__ = ['DetailView', 'ListView', 'SuffixView',
 
 class DetailView(OctopusDetailView):
     model = TestModel
-    template_name = "full.html"
-    fragment_name = "fragment.html"
-
+    base_template = 'base.html'
+    template_name = 'full_new.html'
 
 class ListView(OctopusListView):
     model = TestModel
-    template_name = "full.html"
-    fragment_name = "fragment_list.html"
-
+    base_template = 'base.html'
+    template_name = 'full_list_new.html'
 
 class SuffixView(OctopusDetailView):
     model = TestModel
@@ -76,3 +74,6 @@ for view in edit_views:
 
 OctopusCreateView.fragment_name = 'test_app/full_form.html'
 
+class FragmentView(OctopusTemplateView):
+    base_template = 'base.html'
+    template_name = 'full_new.html'

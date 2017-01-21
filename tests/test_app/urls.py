@@ -6,10 +6,11 @@ from django.views.generic.base import TemplateView
 from .views import DetailView, ListView, SuffixView, \
     DateDetailView, YearArchiveView, \
     ArchiveIndexView, DayArchiveView, WeekArchiveView, MonthArchiveView, \
-    TodayArchiveView,UpdateView, CreateView, DeleteView
+    TodayArchiveView,UpdateView, CreateView, DeleteView, FragmentView
 
 url_list = [
     url(r'^/?$', TemplateView.as_view(template_name='base.html'), name="home"),
+    url(r'^frag/?$', FragmentView.as_view(), name="fragment"),
     url(r'^create/$', CreateView.as_view(), name="create"),
     url(r'^update/(?P<pk>\d)$', UpdateView.as_view(), name="update"),
     url(r'delete/(?P<pk>\d)$', DeleteView.as_view(), name='delete'),

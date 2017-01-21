@@ -36,15 +36,15 @@ $(function(){
 
     $.fn.extend({
         bindOctopus: function(){
-            $(this).find('.octopus-link').unbind('click', prepareLinkRequest).bind('click', prepareLinkRequest);
-            $(this).find('.octopus-form').unbind('submit', prepareFormRequest).bind('submit', prepareFormRequest);
+            $(this).off('click', '.octopus-link', prepareLinkRequest)
+                .on('click', '.octopus-link', prepareLinkRequest);
+            $(this).off('submit', '.octopus-form',  prepareFormRequest)
+                .on('submit', '.octopus-form', prepareFormRequest);
             return this;
         },
         disable: function(){
             this.css({'pointer-events': 'none'});
-            $(this).unbind('click')
-                .removeClass('octopus-link')
-                .removeClass('octopus-form');
+            $(this).off('click', 'octopus-link').removeClass('octopus-link')
             return this;
         }
     });
@@ -222,6 +222,7 @@ $(function(){
                     window.history.pushState(browserState, "", href);
                 }
             }
+            $(sourceElement.target).fadeTo(100, 1);
         };
 
         this.submit = function() {
@@ -229,8 +230,6 @@ $(function(){
             if (href == location.href && $(sourceElement).attr('multi') == "False") {
                 return;
             }
-
-            $(this).fadeTo('.5');
 
             var csrftoken = getCookie('csrftoken');
 
@@ -242,6 +241,7 @@ $(function(){
                 }
             });
 
+            $(sourceElement.target).fadeTo(100, .2);
 
             $.ajax({
                 url: href,
