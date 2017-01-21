@@ -73,3 +73,6 @@ for view in edit_views:
         'success_url': '/list/',
         'fields': ('date', )
     })
+
+OctopusCreateView.fragment_name = 'test_app/full_form.html'
+

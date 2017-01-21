@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.4
+
+* due to changes in django, new dependencies are required:
+
+    'django.contrib.auth',
+    'django.contrib.contenttypes'
+
+* Added javascript build commands: see `BUILD_INSTRUCTIONS.md` for details
+* Includes custom build of jQuery to use only the required components
+* Trivial javascript improvements
+
 ## v0.3.2
 
 * removed deprecated 'a' tag

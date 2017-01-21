@@ -46,6 +46,8 @@ works great!! :D
 2\. `settings.py`
 
     INSTALLED_APPS = (
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
         ...
         'octopus',
         ...
@@ -55,9 +57,8 @@ You may need to restart your development server to detect the template tags.
 
 3\. Add javascript:
 
-    <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript">
-    </script>
-    <script src="{% static 'octopus/both.js' %}" type="text/javascript"></script>
+    <script src="{% static 'octopus/minimum-jquery-2.1.1.js' %}"></script>
+    <script src="{% static 'octopus/octopus.js' %}"></script>
 
 4\. Define your views:
 
@@ -66,12 +67,12 @@ You may need to restart your development server to detect the template tags.
     def YourDetailView(OctopusDetailView):
         model = YourModel
         template_name = "<template name>"
-        fragment_name = "<template fragment name>"
+        base_template = '<some base template>'
 
     def YourListView(OctopusListView):
         model = YourModel
         template_name = "<template name>"
-        fragment_name = "<template fragment name>"
+        base_template = '<some base template>'
 
 where `template_name` is the name of a fully rendered template and
 `fragment_name` is a stripped down template.  It's recommended to simply
@@ -97,6 +98,17 @@ parameters and their default values.
 
 
 ## Changelog (Recent Changes)
+
+## v0.4
+
+* due to changes in django, new dependencies are required:
+    
+    'django.contrib.auth',
+    'django.contrib.contenttypes'
+  
+* Added javascript build commands: see `BUILD_INSTRUCTIONS.md` for details
+* Includes custom build of jQuery to use only the required components
+* Trivial javascript improvements
 
 ## v0.3.1
 
@@ -185,12 +197,12 @@ insertion method so you can hook into them if you wish.
 
 ## Requirements ##
 
-1. Python 2.7, 3.3, or 3.4
+1. Python 2.7, 3.4, 3.5, 3.6
 
-2. Django, v1.5+
+2. Django, v1.10+
 
-3. jQuery (Tested with 1.11 but probably works with any recent version that 
- supports deferred.done, deferred.fail, and deferred.always methods)
+3. jQuery 1.11+ (A custom build is provided that only uses the  
+minimum required components) 
 
 ## How does it work?
 
@@ -214,35 +226,25 @@ back/forward functionality.
     settings.py
     
     INSTALLED_APPS = (
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
         ...
         'octopus'
     )
     
-3\. Include the appropriate javascript to your templates, depending on the 
-  following scenarios:
-
-  A.  Make sure you have jQuery included before the `octopus` JS files.  If 
-  you're lazy, here's a quick link for you:
-  
-    <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
-
-  B.  If you need CSRF protection(i.e., for a POST request), include `ajax.js`
-
-    <script src="{% static 'octopus/ajax.js' %}" type="text/javascript"></script>
+A `RunTimeError` will be thrown if auth and contenttypes are not loaded
     
-  This is just the JS pulled directly from djangoproject.com:    
-  https://docs.djangoproject.com/en/dev/ref/csrf/#ajax  
-  so feel free to write your own.  There's nothing special about it.
-  
-  C.  Include `octopus.js`
-  
-    <script src="{% static 'octopus/octopus.js' %}" type="text/javascript"></script>
-    
+3\. Include the javascript to your templates.
 
-  D.  If you need both, you can skip B and C and just include `both.js`
-  
-    <script src="{% static 'octopus/both.js' %}" type="text/javascript"></script>
-    
+jQuery is required. If you're not using it already, a custom build is  
+provided that only uses the `css`, `ajax`, `events`, and `effects`  
+components of jQuery. It is built off of v2.1.1.
+
+jQuery should be loaded before `octopus.js`
+
+    <script src="{% static 'octopus/minimum-jquery-2.1.1.js' %}"></script>
+    <script src="{% static 'octopus/octopus.js' %}"></script>
+   
 
 ## Usage ##
 

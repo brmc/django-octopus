@@ -1,0 +1,35 @@
+{
+  "name": "octopus",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.org/brmc/django-octopus.svg?branch=master)](https://travis-ci.org/brmc/django-octopus)",
+  "main": "js/octopus.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "browserify js/octopus.js -o octopus/static/octopus/octopus.js",
+    "build-test": "python tests/manage.py collectstatic -i admin --no-input",
+    "build-all": "npm run build; npm run build-test",
+    "build-jquery": "jquery-builder --exclude deprecated,dimensions,offset,wrap -m -v '2.1.1' > js/minimum-jquery-2.1.1.js",
+    "install-jquery": "cp js/minimum-jquery* octopus/static/octopus/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brmc/django-octopus.git"
+  },
+  "keywords": [
+    "django",
+    "ajax",
+    "pull",
+    "intercooler"
+  ],
+  "author": "Brian McClure",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brmc/django-octopus/issues"
+  },
+  "homepage": "https://github.com/brmc/django-octopus#readme",
+  "devDependencies": {
+    "jquery-builder": "^0.7.0"
+  }
+}
