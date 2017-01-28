@@ -1,5 +1,5 @@
 {
-  "name": "octopus",
+  "name": "django-octopus",
   "version": "1.0.0",
   "description": "[![Build Status](https://travis-ci.org/brmc/django-octopus.svg?branch=master)](https://travis-ci.org/brmc/django-octopus)",
   "main": "js/octopus.js",
@@ -28,8 +28,5 @@
   "bugs": {
     "url": "https://github.com/brmc/django-octopus/issues"
   },
-  "homepage": "https://github.com/brmc/django-octopus#readme",
-  "devDependencies": {
-    "jquery-builder": "^0.7.0"
-  }
+  "homepage": "https://github.com/brmc/django-octopus#readme"
 }

@@ -83,10 +83,12 @@ $(function(){
         /**
          * @param {string} newContent
          */
-        var buildContent = function(newContent){
+        var parseResponseIntoTitleAndContent = function(newContent){
             var oldContent = $(sourceElement.target).html();
 
-            title = $(sourceElement).attr('title');
+            title = $(newContent).filter('title').text().trim();
+
+            newContent = $(newContent).not('title');
 
             switch(insertionMethod){
                 case "append":
@@ -154,6 +156,10 @@ $(function(){
             return cookieValue;
         }
 
+        var bindOctopusToTarget = function(){
+            $(sourceElement.target).bindOctopus();
+        };
+
         var insertContent = function(data){
             data = !errorContent ? data : errorContent;
 
@@ -169,21 +175,10 @@ $(function(){
 
             switch(insertionMethod){
                 case 'prepend':
-                    $(elem).hide();
-                    $(sourceElement.target).prepend(elem);
-
-                    $(elem).slideDown("fast", function(){
-                        $(sourceElement.target).bindOctopus();
-                    });
-                    break;
                 case 'append':
                     $(elem).hide();
-                    $(sourceElement.target).append(elem);
-
-                    $(elem).slideDown("fast", function(){
-                        $(sourceElement.target).bindOctopus();
-                    });
-
+                    $(sourceElement.target)[insertionMethod](elem);
+                    $(elem).slideDown("fast", bindOctopusToTarget);
                     break;
                 case 'self':
                     if($(sourceElement).hasClass('octopus-link')){
@@ -199,7 +194,6 @@ $(function(){
                     });
                     break;
                 default:
-
                     $(sourceElement.target).fadeOut('fast', function() {
                         $(this).html(elem).fadeIn('fast', function(){
                             $(sourceElement.target).bindOctopus();
@@ -207,7 +201,8 @@ $(function(){
                     });
 
             }
-            if (title != "None" && title != undefined){
+
+            if (title != "" && title !== undefined){
                 $('title').text(title);
 
                 try{
@@ -222,6 +217,7 @@ $(function(){
                     window.history.pushState(browserState, "", href);
                 }
             }
+
             $(sourceElement.target).fadeTo(100, 1);
         };
 
@@ -247,7 +243,7 @@ $(function(){
                 url: href,
                 type: $(sourceElement).attr('method'),
                 data: requestBody
-            }).done(buildContent)
+            }).done(parseResponseIntoTitleAndContent)
                 .fail(buildErrorContent)
                 .always(insertContent);
         }
