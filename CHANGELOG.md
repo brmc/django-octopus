@@ -11,6 +11,9 @@
 * Includes custom build of jQuery to use only the required components
 * While loading, the target element fades to 30%
 * Trivial javascript improvements
+* Titles are included directly in the response.  Before, titles were  
+defined on the link itself. Now a `title` block is supported to define  
+  title content
 
 ## v0.3.2
 

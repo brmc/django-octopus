@@ -46,8 +46,8 @@ def create_html_tag(text, target, url_name, *url_args, **kwargs):
     # be easier to use and feel more natural.
     method, insert, multi, classes, id_, title = \
         map(kwargs.get,
-            ['method', 'insert', 'multi', 'classes', 'id', 'title'],
-            ['get',    'replace', False,   None,      None, None, ])
+            ['method', 'insert', 'multi', 'classes', 'id'],
+            ['get',    'replace', False,   None,      None])
 
     if insert.lower() not in ['replace', 'append', 'prepend', 'self']:
         raise ImproperlyConfigured("%s is not a valid value for insert. It "
@@ -61,7 +61,6 @@ def create_html_tag(text, target, url_name, *url_args, **kwargs):
         'classes': classes,
         'method': method,
         'href': href,
-        'title': title,
         'text': text,
         'multi': multi
     })
@@ -100,14 +99,3 @@ def form(text, form, url_name, *url_args, **kwargs):
     context['form'] = form
 
     return context
-
-
-
-@register.simple_tag
-def fragment():
-    return settings.START_TAG
-
-
-@register.simple_tag
-def endfragment():
-    return settings.END_TAG
