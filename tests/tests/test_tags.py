@@ -32,7 +32,7 @@ class TestA(TestCase):
             ('method', 'get'),
             ('href', '/detail/1'),
             ('text', 'text'),
-            ('multi', False)
+            ('multi', True)
         ))
 
         actual = a("text", "target", "detail", self.id, **kwargs)
@@ -54,7 +54,7 @@ class TestA(TestCase):
             ('method', 'get'),
             ('href', '/multi/1/a'),
             ('text', 'text'),
-            ('multi', False)
+            ('multi', True)
         ))
         actual = a("text", "target", "multi", self.id, 'a', **kwargs)
 
@@ -76,7 +76,7 @@ class TestA(TestCase):
             ('method', 'post'),
             ('href', '/list/'),
             ('text', 'text'),
-            ('multi', False)
+            ('multi', True)
         ))
 
         self.assertEqual(actual, expected)
@@ -104,7 +104,7 @@ class TestA(TestCase):
               'data-oc-method="get" ' \
               'class="octopus-link poop" ' \
               'href="/detail/{:d}" ' \
-              'data-oc-multi="False">text</a>'
+              'data-oc-multi="True">text</a>'
         expected = raw.format(self.id)
 
         self.assertEqual(actual, expected)
@@ -126,7 +126,7 @@ class TestA(TestCase):
                    'data-oc-method="get" ' \
                    'class="octopus-link" ' \
                    'href="/detail/{:d}" ' \
-                   'data-oc-multi="False">text</a>'.format(self.id)
+                   'data-oc-multi="True">text</a>'.format(self.id)
 
         self.assertEqual(actual, expected)
 

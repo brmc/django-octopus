@@ -47,7 +47,7 @@ def create_html_tag(text, target, href, *href_args, **kwargs):
     method, insert, multi, classes, id_ = \
         map(kwargs.get,
             ['method', 'insert', 'multi', 'class', 'id'],
-            ['get', 'replace', False, '', ''])
+            ['get', 'replace', True, '', ''])
 
     if insert.lower() not in ['replace', 'append', 'prepend', 'self']:
         error_message = u"'{}' is not a valid value for insert. It " \

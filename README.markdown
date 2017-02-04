@@ -83,9 +83,9 @@ writing your own functional views.
 
     <a href="{% url 'detail' object.id %}" 
        class="octopus-link"
-       target="#container" 
-       insert="replace" 
-       method="get" 
+       data-oc-target="#container" 
+       data-oc-insert="replace" 
+       data-oc-method="get" 
        >Link Text</a>
 
 or or with a template tag
@@ -114,6 +114,8 @@ parameters and their default values.
 * Titles are included directly in the response.  Before, titles were  
 defined on the link itself. Now a `title` block is supported to define  
   title content
+* Switched to using data-* html attributes
+* Changed default value for `multi` to `True`
 
 ## v0.3.1
 
