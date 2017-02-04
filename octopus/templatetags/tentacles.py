@@ -54,16 +54,15 @@ def create_html_tag(text, target, href, *href_args, **kwargs):
                                    "should be: replace, append, prepend, or self."
                                     % insert)
 
-    return OrderedDict({
-        'id': id_,
-        'target': target,
-        'insert': insert,
-        'class': classes,
-        'method': method,
-        'href': href,
-        'text': text,
-        'multi': multi
-    })
+    return OrderedDict(
+        (('id', id_),
+        ('target', target),
+        ('insert', insert),
+        ('class', classes),
+        ('method', method),
+        ('href', href),
+        ('text', text),
+        ('multi', multi)))
 
 
 @register.inclusion_tag('octopus/link.html')

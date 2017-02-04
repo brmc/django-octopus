@@ -267,7 +267,7 @@ $(function(){
             $(target).fadeTo(100, .5, function(){
                 $.ajax({
                     url: href,
-                    type: $(sourceElement).attr('method'),
+                    type: $(sourceElement).attr('data-oc-method'),
                     data: requestBody
                 }).done(parseResponseIntoTitleAndContent)
                     .fail(buildErrorContent)

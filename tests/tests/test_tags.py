@@ -1,10 +1,15 @@
+import re
 from collections import OrderedDict
 from django.forms.models import ModelForm
 from django.template.loader import render_to_string
 from django.test import TestCase
 from octopus.templatetags.tentacles import a
 from test_app.models import TestModel
-from tests.octopus.templatetags.tentacles import form
+from octopus.templatetags.tentacles import form
+
+
+def remove_whitespace(rendered):
+    return re.sub('\s{2,}', ' ', rendered)
 
 
 class TestA(TestCase):
@@ -14,97 +19,95 @@ class TestA(TestCase):
         self.id = self.m.id
 
     def test_a_single_arg(self):
-        self.assertEqual(
-            a(
-                "text",
-                "target",
-                "detail",
-                self.id,
-                insert="append",
-                classes="poop",
-                id="man",
-                title="title"),
-            OrderedDict({
-                'id': 'man',
-                'target': 'target',
-                'insert': 'append',
-                'method': 'get',
-                'classes': 'poop',
-                'href': '/detail/1',
-                'title': 'title',
-                'text': 'text',
-                'multi': False
-            })
-        )
+        kwargs = {
+            'insert': "append",
+            'class': "poop",
+            'id': "man"
+        }
+        expected = OrderedDict((
+            ('id', 'man'),
+            ('target', 'target'),
+            ('insert', 'append'),
+            ('class', 'poop'),
+            ('method', 'get'),
+            ('href', '/detail/1'),
+            ('text', 'text'),
+            ('multi', False)
+        ))
+
+        actual = a("text", "target", "detail", self.id, **kwargs)
+
+        self.assertEqual(actual, expected)
 
     def test_a_multi_arg(self):
-        self.assertEqual(
-            a(
-                "text",
-                "target",
+        kwargs = {
+            'insert':"prepend",
+            'method':'get',
+            'class':"poop",
+            'id':"man"
+        }
+        expected = OrderedDict((
+            ('id', 'man'),
+            ('target', 'target'),
+            ('insert', 'prepend'),
+            ('class', 'poop'),
+            ('method', 'get'),
+            ('href', '/multi/1/a'),
+            ('text', 'text'),
+            ('multi', False)
+        ))
+        actual = a("text", "target", "multi", self.id, 'a', **kwargs)
 
-                "multi",
-                self.id,
-                'a',
-                insert="prepend",
-                method='get',
-                classes="poop",
-                id="man",
-                title="title"),
-            OrderedDict({
-                'id': 'man',
-                'target': 'target',
-                'insert': 'prepend',
-                'classes': 'poop',
-                'method': 'get',
-                'href': '/multi/1/a',
-                'title': 'title',
-                'text': 'text',
-                'multi': False
-            })
-        )
+        self.assertEqual(actual, expected)
 
     def test_a_no_arg(self):
-        self.assertEqual(
-            a(
-                "text",
-                "target",
-                "list",
-                method='post',
-                classes="poop",
-                id="man",
-                title="title"),
-            OrderedDict({
-                'id': 'man',
-                'target': 'target',
-                'insert': 'replace',
-                'method': 'post',
-                'classes': 'poop',
-                'href': '/list/',
-                'title': "title",
-                'text': 'text',
-                'multi': False
-            })
-        )
+        kwargs = {
+            'method': 'post',
+            'class': "poop",
+            'id': "man"
+        }
+
+        actual = a("text", "target", "list", **kwargs)
+        expected = OrderedDict((
+            ('id', 'man'),
+            ('target', 'target'),
+            ('insert', 'replace'),
+            ('class', 'poop'),
+            ('method', 'post'),
+            ('href', '/list/'),
+            ('text', 'text'),
+            ('multi', False)
+        ))
+
+        self.assertEqual(actual, expected)
 
     def test_render_template(self):
+        kwargs = {
+            'insert': "append",
+            'class':"poop",
+            'id': "man"
+        }
+
         context = a(
             "text",
             "target",
             "detail",
             self.id,
-            insert="append",
-            classes="poop",
-            id="man",
-            title="title"
-        )
+            **kwargs)
 
-        self.assertEqual(
-            render_to_string('octopus/link.html', context),
-            u'<a id="man" target="target" insert="append" method="get" '\
-            'class="octopus-link poop" href="/detail/%d" '\
-            'title="title" multi="False">text</a>' % self.id
-        )
+        rendered = render_to_string('octopus/link.html', context)
+        actual = remove_whitespace(rendered)
+
+        raw = '<a id="man" ' \
+              'data-oc-target="target" ' \
+              'data-oc-insert="append" ' \
+              'data-oc-method="get" ' \
+              'class="octopus-link poop" ' \
+              'href="/detail/{:d}" ' \
+              'data-oc-multi="False">text</a>'
+        expected = raw.format(self.id)
+
+        self.assertEqual(actual, expected)
 
     def test_render_template_nokwargs(self):
         context = a(
@@ -112,14 +115,20 @@ class TestA(TestCase):
             "target",
             "detail",
             self.id,
-            insert="prepend",
-        )
+            insert="prepend")
 
-        self.assertEqual(
-            render_to_string('octopus/link.html', context),
-            u'<a target="target" insert="prepend" method="get" ' \
-            'class="octopus-link" href="/detail/%d" title="None" multi="False">text</a>'
-            % self.id)
+        rendered = render_to_string('octopus/link.html', context)
+        actual = remove_whitespace(rendered)
+
+        expected = '<a ' \
+                   'data-oc-target="target" ' \
+                   'data-oc-insert="prepend" ' \
+                   'data-oc-method="get" ' \
+                   'class="octopus-link" ' \
+                   'href="/detail/{:d}" ' \
+                   'data-oc-multi="False">text</a>'.format(self.id)
+
+        self.assertEqual(actual, expected)
 
 
 class TestForm(TestCase):
@@ -133,25 +142,36 @@ class TestForm(TestCase):
         context = form(
             "submit",
             self.MForm,
-            "/"
+            "/")
 
-        )
-        self.assertEqual(
-            render_to_string('octopus/form.html', context),
-            render_to_string('test_app/form.html', {'form': self.MForm}),)
+        actual = render_to_string('octopus/form.html', context)
+        actual = remove_whitespace(actual)
+
+        expected = render_to_string('test_app/form.html', {'form': self.MForm})
+        expected = remove_whitespace(expected)
+
+        self.assertEqual(actual, expected)
 
     def test_render_full_form(self):
+        kwargs = {
+            'method': "get",
+            'insert': "append",
+            'target': "#main",
+            'id': "id",
+            'class': "class"
+        }
 
+        self.maxDiff = None
         context = form(
             "submit",
             self.MForm,
             "/",
-            method="get",
-            insert="append",
-            target="#main",
-            id="id",
-            classes="class"
-        )
-        self.assertEqual(render_to_string('octopus/form.html', context),
-                         render_to_string(
-                             'test_app/full_form.html', {'form': self.MForm}),)
+            **kwargs)
+
+        actual = render_to_string('octopus/form.html', context)
+        actual = remove_whitespace(actual)
+
+        expected = render_to_string('test_app/full_form.html', {'form': self.MForm})
+        expected = remove_whitespace(expected)
+
+        self.assertEqual(actual, expected)

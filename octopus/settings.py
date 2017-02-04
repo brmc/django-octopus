@@ -3,7 +3,6 @@
 
 from django.conf import settings
 
-
 START_TAG = getattr(settings, "OCTOPUS_START_TAG", "<<<OCTOPUSDESTROYER!!!>>>")
 END_TAG = getattr(settings, "OCTOPUS_END_TAG", START_TAG)
 
@@ -13,5 +12,4 @@ ALLOW_MANUAL = getattr(settings, "OCTOPUS_ALLOW_MANUAL", True)
 # Currently not being used
 FAIL_SILENTLY = getattr(settings, "OCTOPUS_FAIL_SILENTLY", True)
 
-
-__all__ = (ALLOW_MANUAL, )
+__all__ = (ALLOW_MANUAL,)

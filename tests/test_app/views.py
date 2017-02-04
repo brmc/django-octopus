@@ -1,4 +1,3 @@
-from django.views.generic.dates import DayArchiveView
 from octopus.views import OctopusDetailView, OctopusListView, \
     OctopusDateDetailView, OctopusYearArchiveView, OctopusArchiveIndexView, \
     OctopusDayArchiveView, OctopusWeekArchiveView, OctopusMonthArchiveView, \
@@ -7,20 +6,23 @@ from octopus.views import OctopusDetailView, OctopusListView, \
 from test_app.models import TestModel
 
 
-__all__ = ['DetailView', 'ListView', 'SuffixView',
-    'DateDetailView', 'YearArchiveView',
-    'ArchiveIndexView', 'DayArchiveView', 'WeekArchiveView', 'MonthArchiveView',
-    'TodayArchiveView', 'CreateView', 'UpdateView', 'DeleteView']
+__all__ = ['DetailView', 'ListView', 'SuffixView', 'DateDetailView',
+           'YearArchiveView', 'ArchiveIndexView', 'DayArchiveView',
+           'WeekArchiveView', 'MonthArchiveView', 'TodayArchiveView',
+           'CreateView', 'UpdateView', 'DeleteView']
+
 
 class DetailView(OctopusDetailView):
     model = TestModel
     base_template = 'base.html'
     template_name = 'full_new.html'
 
+
 class ListView(OctopusListView):
     model = TestModel
     base_template = 'base.html'
     template_name = 'full_list_new.html'
+
 
 class SuffixView(OctopusDetailView):
     model = TestModel
@@ -73,6 +75,7 @@ for view in edit_views:
     })
 
 OctopusCreateView.fragment_name = 'test_app/full_form.html'
+
 
 class FragmentView(OctopusTemplateView):
     base_template = 'base.html'

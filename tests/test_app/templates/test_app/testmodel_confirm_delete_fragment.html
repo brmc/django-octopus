@@ -1,7 +1,0 @@
-{% block content %}
-<form class="octopus-form" action="{{ request.path }}" method="post" insert="recurse" target="#main">
-    {% csrf_token %}
-         <p>Are you sure you want to delete "{{ object }}"?</p>
-    <input type="submit" value="Confirm" />
-    </form>
-{% endblock %}
