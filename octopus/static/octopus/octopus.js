@@ -107,7 +107,6 @@ $(function(){
                 default:
                     content = newContent;
             }
-
         };
 
         /**
@@ -166,6 +165,50 @@ $(function(){
             $(target).bindOctopus();
         };
 
+
+        /**
+         * @param {string} data
+         */
+        function insertByMethod(data) {
+            var elem = $.parseHTML(data);
+            elem = $(elem).addClass("octopus-" + insertionMethod);
+
+            $(elem).hide();
+            $(target)[insertionMethod](elem);
+            $(elem).slideDown("fast", bindOctopusToTarget);
+        }
+
+        /**
+         * @param {string} data
+         */
+        function replaceSelf(data) {
+            if ($(sourceElement).hasClass('octopus-link')) {
+                sourceElement = $(sourceElement).parent();
+            }
+            $(sourceElement).fadeOut('fast', function () {
+                this.outerHTML = data;
+                $(this).fadeIn('fast', function () {
+                    $('body').bindOctopus();
+                });
+
+                browserState['target'] = sourceElement;
+            });
+        }
+
+        /**
+         * @param {string} data
+         */
+        function replaceTarget(data) {
+            var elem = $.parseHTML(data);
+            elem = $(elem).addClass("octopus-" + insertionMethod);
+
+            $(target).fadeOut('fast', function () {
+                $(this).html(elem).fadeIn('fast', function () {
+                    $(target).bindOctopus();
+                });
+            });
+        }
+
         var insertContent = function(data){
             data = !errorContent ? data : errorContent;
 
@@ -175,37 +218,16 @@ $(function(){
                 container: content
             };
 
-            var elem =  $.parseHTML(data);
-
-            elem = $(elem).addClass("octopus-"+insertionMethod);
-
             switch(insertionMethod){
                 case 'prepend':
                 case 'append':
-                    $(elem).hide();
-                    $(target)[insertionMethod](elem);
-                    $(elem).slideDown("fast", bindOctopusToTarget);
+                    insertByMethod(data);
                     break;
                 case 'self':
-                    if($(sourceElement).hasClass('octopus-link')){
-                        sourceElement = $(sourceElement).parent();
-                    }
-                    $(sourceElement).fadeOut('fast', function() {
-                        this.outerHTML = data;
-                        $(this).fadeIn('fast', function(){
-                            $('body').bindOctopus();
-                        });
-
-                        browserState['target'] = sourceElement;
-                    });
+                    replaceSelf(data);
                     break;
                 default:
-                    $(target).fadeOut('fast', function() {
-                        $(this).html(elem).fadeIn('fast', function(){
-                            $(target).bindOctopus();
-                        });
-                    });
-
+                    replaceTarget(data);
             }
 
             if (title != "" && title !== undefined){
@@ -243,18 +265,17 @@ $(function(){
                 }
             });
 
-            $(target).fadeTo(100, .2);
-
-            $.ajax({
-                url: href,
-                type: $(sourceElement).attr('method'),
-                data: requestBody
-            }).done(parseResponseIntoTitleAndContent)
-                .fail(buildErrorContent)
-                .always(insertContent);
+            $(target).fadeTo(100, .5, function(){
+                $.ajax({
+                    url: href,
+                    type: $(sourceElement).attr('method'),
+                    data: requestBody
+                }).done(parseResponseIntoTitleAndContent)
+                    .fail(buildErrorContent)
+                    .always(insertContent);
+            });
         }
     }
-
 
     $('.octopus-link').on('click', prepareLinkRequest);
     $('.octopus-form').on('submit', prepareFormRequest);
