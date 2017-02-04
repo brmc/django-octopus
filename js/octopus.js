@@ -14,11 +14,11 @@ $(function(){
         e.preventDefault();
 
         var link = this;
-        if (link.getAttribute('multi') == "False") {
+        if (link.getAttribute('data-oc-multi') == "False") {
             $(link).disable();
         }
 
-        var insertionMethod = link.getAttribute('insert');
+        var insertionMethod = link.getAttribute('data-oc-insert');
         var request = new Request(link, insertionMethod, this.href);
 
         request.submit();
@@ -28,7 +28,7 @@ $(function(){
         e.preventDefault();
         var form = this;
         var data = $(form).serializeArray();
-        var insertionMethod = form.getAttribute('insert');
+        var insertionMethod = form.getAttribute('data-oc-insert');
         var request = new Request(form, insertionMethod, this.action, data);
 
         request.submit();
@@ -44,7 +44,7 @@ $(function(){
         },
         disable: function(){
             this.css({'pointer-events': 'none'});
-            $(this).off('click', 'octopus-link').removeClass('octopus-link')
+            $(this).off('click', 'octopus-link').removeClass('octopus-link');
             return this;
         }
     });
@@ -58,6 +58,11 @@ $(function(){
      */
     function Request(sourceElement, insertionMethod, href, requestBody){
         requestBody = requestBody || {};
+
+        /**
+         * @type {string}
+         */
+        var target = sourceElement.getAttribute('data-oc-target');
 
         /**
          * @type {string}
@@ -84,7 +89,7 @@ $(function(){
          * @param {string} newContent
          */
         var parseResponseIntoTitleAndContent = function(newContent){
-            var oldContent = $(sourceElement.target).html();
+            var oldContent = $(target).html();
 
             title = $(newContent).filter('title').text().trim();
 
@@ -157,7 +162,7 @@ $(function(){
         }
 
         var bindOctopusToTarget = function(){
-            $(sourceElement.target).bindOctopus();
+            $(target).bindOctopus();
         };
 
         var insertContent = function(data){
@@ -165,7 +170,7 @@ $(function(){
 
             browserState = {
                 title: title,
-                target: sourceElement.target,
+                target: target,
                 container: content
             };
 
@@ -177,7 +182,7 @@ $(function(){
                 case 'prepend':
                 case 'append':
                     $(elem).hide();
-                    $(sourceElement.target)[insertionMethod](elem);
+                    $(target)[insertionMethod](elem);
                     $(elem).slideDown("fast", bindOctopusToTarget);
                     break;
                 case 'self':
@@ -194,9 +199,9 @@ $(function(){
                     });
                     break;
                 default:
-                    $(sourceElement.target).fadeOut('fast', function() {
+                    $(target).fadeOut('fast', function() {
                         $(this).html(elem).fadeIn('fast', function(){
-                            $(sourceElement.target).bindOctopus();
+                            $(target).bindOctopus();
                         });
                     });
 
@@ -218,7 +223,7 @@ $(function(){
                 }
             }
 
-            $(sourceElement.target).fadeTo(100, 1);
+            $(target).fadeTo(100, 1);
         };
 
         this.submit = function() {
@@ -237,7 +242,7 @@ $(function(){
                 }
             });
 
-            $(sourceElement.target).fadeTo(100, .2);
+            $(target).fadeTo(100, .2);
 
             $.ajax({
                 url: href,

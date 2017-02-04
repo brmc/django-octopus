@@ -9,7 +9,7 @@ from octopus import settings
 register = template.Library()
 
 
-def create_html_tag(text, target, url_name, *url_args, **kwargs):
+def create_html_tag(text, target, href, *href_args, **kwargs):
     """
     builds a link that can be used by static/octopus.js.
 
@@ -25,9 +25,9 @@ def create_html_tag(text, target, url_name, *url_args, **kwargs):
         replace, append, prepend.
         Defaults to replace
     :type insert: str
-    :param url_name: The name of the url pattern defined in your urls.py
-    :type url_name: str
-    :param url_args: Any arguments to be passed to this url
+    :param href: The name of the url pattern defined in your urls.py
+    :type href: str
+    :param href_args: Any arguments to be passed to this url
     :param kwargs: Expected kwargs(with default in parentheses):
         method("get"), insert("replace"), classes(None), id(None), title(None)
     :type kwargs: str
@@ -35,19 +35,19 @@ def create_html_tag(text, target, url_name, *url_args, **kwargs):
     """
 
     try:
-        href = reverse(url_name, args=url_args)
+        href = reverse(href, args=href_args)
     except NoReverseMatch:
         if settings.ALLOW_MANUAL is True:
-            href = url_name
+            href = href
         else:
             raise NoReverseMatch
 
     # I'm setting default values here rather than above so that the tag would
     # be easier to use and feel more natural.
-    method, insert, multi, classes, id_, title = \
+    method, insert, multi, classes, id_ = \
         map(kwargs.get,
-            ['method', 'insert', 'multi', 'classes', 'id'],
-            ['get',    'replace', False,   None,      None])
+            ['method', 'insert', 'multi', 'class', 'id'],
+            ['get',    'replace', False,   '',      ''])
 
     if insert.lower() not in ['replace', 'append', 'prepend', 'self']:
         raise ImproperlyConfigured("%s is not a valid value for insert. It "
@@ -58,7 +58,7 @@ def create_html_tag(text, target, url_name, *url_args, **kwargs):
         'id': id_,
         'target': target,
         'insert': insert,
-        'classes': classes,
+        'class': classes,
         'method': method,
         'href': href,
         'text': text,

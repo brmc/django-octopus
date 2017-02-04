@@ -1,4 +1,10 @@
-<form {% if id %}id="{{ id }}" {% endif %}class="octopus-form{% if classes %} {{ classes }}{% endif %}" action="{{ href }}" method="{{ method }}" insert="{{ insert }}" multi="{{ multi }}"{% if target %} target="{{ target }}"{% endif %} title="{{ title }}">
+<form id="{{ id }}"
+      class="octopus-form{% if class %} {{ class }}{% endif %}"
+      action="{{ href }}"
+      method="{{ method }}"
+      data-oc-insert="{{ insert }}"
+      data-oc-multi="{{ multi }}"
+      data-oc-target="{{ target }}">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="{{ text }}" />

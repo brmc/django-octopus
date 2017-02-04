@@ -1,1 +1,7 @@
-<a {% if id %}id="{{ id }}" {% endif %}target="{{ target }}" insert="{{ insert }}" method="{% if method != None %}{{method}}{% else %}get{% endif %}" class="octopus-link{% if classes %} {{ classes }}{% endif %}" href="{{ href }}" title="{{ title }}" multi="{{ multi }}">{{ text }}</a>
+<a {% if id %}id="{{ id }}" {% endif %}
+   data-oc-target="{{ target }}"
+   data-oc-insert="{{ insert }}"
+   data-oc-method="{{method}}"
+   class="octopus-link{% if class %} {{ class }}{% endif %}"
+   href="{{ href }}"
+   data-oc-multi="{{ multi }}">{{ text }}</a>

@@ -74,18 +74,19 @@ You may need to restart your development server to detect the template tags.
         template_name = "<template name>"
         base_template = '<some base template>'
 
-where `template_name` is the name of a fully rendered template and
-`fragment_name` is a stripped down template.  It's recommended to simply
-import `fragment_name` into `template_name`.
+where `base_template` is the parent of `template_name`
 
 See [Usage](#views) for more detail information on using generic views or on 
 writing your own functional views.
 
 5\. Create your links.  Manually, :
 
-    <a href="{% url 'detail' object.id %}" class="octopus-link"
-    target="#container" insert="replace" method="get" title="New title">Link 
-    Text</a>
+    <a href="{% url 'detail' object.id %}" 
+       class="octopus-link"
+       target="#container" 
+       insert="replace" 
+       method="get" 
+       >Link Text</a>
 
 or or with a template tag
 
@@ -352,7 +353,7 @@ build a full link like so:
 
     {% load tentacles %}
     
-    {% a "Link Text" "#container" "detail" object.id method="post" insert="prepend" id="cantelope" classes="inline-block article" title="Manatee killed by Cantelope" %}
+    {% a "Link Text" "#container" "detail" object.id method="post" insert="prepend" id="cantelope" classes="inline-block article" %}
     
 This would create an anchor with the id `cantelope` and classes `octopus-link`, 
 `inline-block, article`. `octopus-link` is added automatically to provide 
@@ -397,11 +398,6 @@ pass a hard-coded url.
     
     * **id**: like above but for the Id.  
       **Default**: None
-
-    * **title**: Text for the `<title>` node.  If a title is not given, then 
-        the browser state will not be updated, and forward/ back functionality
-        will not be preserved.
-      **Default**: None
     
 #### form ####
 
@@ -409,7 +405,7 @@ The syntax is similar to the link tag:
 
     {% load tentacles %}
     
-    {% form "Button Text" form_instance request.path method="get" classes="monkeypus" id="create" insert="append" target="footer" title="Milksteak for Champions" %}
+    {% form "Button Text" form_instance request.path method="get" classes="monkeypus" id="create" insert="append" target="footer" %}
 
 
 A couple things to note.
@@ -464,8 +460,6 @@ own form.  Beside the standard required attributes for forms, the only thing
 unique to octopus is to add a hook for the javascript:
  
     class="octopus-form ..."
-
-This is what the 
 
 Then you can pass the kwargs as defined in [Template Tags](#a)
 
