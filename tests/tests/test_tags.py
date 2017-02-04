@@ -41,10 +41,10 @@ class TestA(TestCase):
 
     def test_a_multi_arg(self):
         kwargs = {
-            'insert':"prepend",
-            'method':'get',
-            'class':"poop",
-            'id':"man"
+            'insert': "prepend",
+            'method': 'get',
+            'class': "poop",
+            'id': "man"
         }
         expected = OrderedDict((
             ('id', 'man'),
@@ -84,7 +84,7 @@ class TestA(TestCase):
     def test_render_template(self):
         kwargs = {
             'insert': "append",
-            'class':"poop",
+            'class': "poop",
             'id': "man"
         }
 
@@ -109,7 +109,7 @@ class TestA(TestCase):
 
         self.assertEqual(actual, expected)
 
-    def test_render_template_nokwargs(self):
+    def test_render_template_no_kwargs(self):
         context = a(
             "text",
             "target",
@@ -132,11 +132,10 @@ class TestA(TestCase):
 
 
 class TestForm(TestCase):
-
     class MForm(ModelForm):
         class Meta:
             model = TestModel
-            fields = ('date', )
+            fields = ('date',)
 
     def test_render_minimum_form(self):
         context = form(
@@ -161,7 +160,6 @@ class TestForm(TestCase):
             'class': "class"
         }
 
-        self.maxDiff = None
         context = form(
             "submit",
             self.MForm,
@@ -171,7 +169,8 @@ class TestForm(TestCase):
         actual = render_to_string('octopus/form.html', context)
         actual = remove_whitespace(actual)
 
-        expected = render_to_string('test_app/full_form.html', {'form': self.MForm})
+        expected = render_to_string(
+            'test_app/full_form.html', {'form': self.MForm})
         expected = remove_whitespace(expected)
 
         self.assertEqual(actual, expected)

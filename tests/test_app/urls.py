@@ -6,7 +6,7 @@ from django.views.generic.base import TemplateView
 from .views import DetailView, ListView, SuffixView, \
     DateDetailView, YearArchiveView, \
     ArchiveIndexView, DayArchiveView, WeekArchiveView, MonthArchiveView, \
-    TodayArchiveView,UpdateView, CreateView, DeleteView, FragmentView
+    TodayArchiveView, UpdateView, CreateView, DeleteView, FragmentView
 
 url_list = [
     url(r'^/?$', TemplateView.as_view(template_name='base.html'), name="home"),

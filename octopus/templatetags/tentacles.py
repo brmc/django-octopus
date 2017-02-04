@@ -30,7 +30,7 @@ def create_html_tag(text, target, href, *href_args, **kwargs):
     :param href_args: Any arguments to be passed to this url
     :param kwargs: Expected kwargs(with default in parentheses):
         method("get"), insert("replace"), classes(None), id(None), title(None)
-    :type kwargs: str
+    :type kwargs: dict
     :return: OrderedDict
     """
 
@@ -47,40 +47,45 @@ def create_html_tag(text, target, href, *href_args, **kwargs):
     method, insert, multi, classes, id_ = \
         map(kwargs.get,
             ['method', 'insert', 'multi', 'class', 'id'],
-            ['get',    'replace', False,   '',      ''])
+            ['get', 'replace', False, '', ''])
 
     if insert.lower() not in ['replace', 'append', 'prepend', 'self']:
-        raise ImproperlyConfigured("%s is not a valid value for insert. It "
-                                   "should be: replace, append, prepend, or self."
-                                    % insert)
+        error_message = u"'{}' is not a valid value for insert. It " \
+                        u"should be: replace, append, prepend, " \
+                        u"or self.".format(insert)
+
+        raise ImproperlyConfigured(error_message)
 
     return OrderedDict(
         (('id', id_),
-        ('target', target),
-        ('insert', insert),
-        ('class', classes),
-        ('method', method),
-        ('href', href),
-        ('text', text),
-        ('multi', multi)))
+         ('target', target),
+         ('insert', insert),
+         ('class', classes),
+         ('method', method),
+         ('href', href),
+         ('text', text),
+         ('multi', multi)))
 
 
 @register.inclusion_tag('octopus/link.html')
-def a(text, target, url_name, *url_args, **kwargs):
+def a(text, target, href, *href_args, **kwargs):
     """ Wrapper to create a link compatible with Octopus
 
+    :param href: a raw url or django url name
+    :param target: dom selector where ther response will be injected
     :param text: The clickable text of the link
     :type text: str
     :returns: dict
     """
 
-    return create_html_tag(text, target, url_name, *url_args, **kwargs)
+    return create_html_tag(text, target, href, *href_args, **kwargs)
 
 
 @register.inclusion_tag('octopus/form.html')
-def form(text, form, url_name, *url_args, **kwargs):
+def form(text, form, href, *href_args, **kwargs):
     """ Wrapper to create a form compatible with Octopus
 
+    :param href:
     :param form: an instance of a form
     :type form: FormObject
     :param text: The text that goes on the Submit button
@@ -91,10 +96,10 @@ def form(text, form, url_name, *url_args, **kwargs):
     # Default values for forms should differ from regular links
     kwargs['method'], kwargs['insert'], kwargs['multi'] = \
         map(kwargs.get, ['method', 'insert', 'multi'],
-                        ['post',   'self',   'True'])
+            ['post', 'self', 'True'])
 
     context = create_html_tag(text, kwargs.pop('target', None),
-                              url_name, *url_args, **kwargs)
+                              href, *href_args, **kwargs)
     context['form'] = form
 
     return context

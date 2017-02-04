@@ -4,7 +4,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.messages','django.contrib.sessions',
+    'django.contrib.messages', 'django.contrib.sessions',
     'django.contrib.admin',
     'octopus',
     'test_app',
@@ -19,7 +19,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-  'django.core.context_processors.request',
+    'django.core.context_processors.request',
 )
 
 APPEND_SLASHES = True
@@ -31,8 +31,7 @@ STATIC_ROOT = os.path.join(root_dir, 'static')
 print(STATIC_ROOT)
 TEMPLATE_DIRECTORIES = (os.path.join(root_dir, 'test_app/templates'))
 
-MIDDLEWARE_CLASSES = ('django.middleware.csrf.CsrfViewMiddleware', )
-#MIDDLEWARE_CLASSES = ('django.middleware.csrf.CsrfViewMiddleware', )
+MIDDLEWARE_CLASSES = ('django.middleware.csrf.CsrfViewMiddleware',)
 
 ROOT_URLCONF = "test_app.urls"
 

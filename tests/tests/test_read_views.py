@@ -42,38 +42,3 @@ class ViewsTest(TestCase):
         response = self.client.get('/list/', {}).content.strip()
 
         self.assertTrue('too much milksteak' in response)
-
-
-'''
-
-    def test_ajax_DetailView(self):
-
-        response = self.client.get('/detail/%d' % self.m.id,  {},
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        self.assertTrue("fragment.html" in response.template_name)
-
-
-    def test_full_DetailView(self):
-        response = self.client.get('/detail/%d' % self.m.id)
-
-        self.assertTrue("full.html" in response.template_name)
-
-    def test_ajax_ListView(self):
-        response = self.client.get(
-            '/list/',
-            {},
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-
-        self.assertTrue("fragment_list.html" in response.template_name)
-
-    def test_full_ListView(self):
-        response = self.client.get('/list/')
-
-        self.assertTrue("full.html" in response.template_name)
-
-    def test_ajax_SuffixView(self):
-        response = self.client.get('/suffix/%d' % self.m.id,  {},
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-        self.assertEqual(b"suffix", response.content)
-
-'''

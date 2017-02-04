@@ -11,20 +11,20 @@ from setuptools import setup, find_packages
 description = """"""
 
 setup(
-    name     = 'django-octopus',
-    version  = '0.4',
-    packages = find_packages(),
+    name='django-octopus',
+    version='0.4',
+    packages=find_packages(),
     include_package_data=True,
-    requires = ['python (>= 2.7)', 'python (>= 3.3)', 'django (>= 1.6)'],
-    description  = 'A simple AJAX pull framework for django, now with full' \
-                   'featured demo',
-    author       = 'Brian McClure',
-    author_email = 'brian@mcclure.pw',
-    url          = 'https://github.com/brmc/django-octopus',
-    download_url = 'https://github.com/brmc/django-octopus.git',
-    license      = 'MIT License',
-    keywords     = 'django, ajax, front-end, pull',
-    classifiers  = [
+    requires=['python (>= 2.7)', 'python (>= 3.3)', 'django (>= 1.6)'],
+    description='A simple AJAX pull framework for django, now with full' \
+                'featured demo',
+    author='Brian McClure',
+    author_email='brian@mcclure.pw',
+    url='https://github.com/brmc/django-octopus',
+    download_url='https://github.com/brmc/django-octopus.git',
+    license='MIT License',
+    keywords='django, ajax, front-end, pull',
+    classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',

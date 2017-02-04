@@ -11,7 +11,7 @@
 </head>
 <body>
 <nav>
-    <li>{% a 'home(replace)' 'body' 'home' multi=False %}</li>
+    <ul><li>{% a 'home(replace)' 'body' 'home' multi=False %}</li>
     <li>{% a 'fragment(replace)' '#main' 'fragment' multi=True %}</li>
     <li>{% a 'detail(replace)' '#main' 'detail' 1 title="balls"%}</li>
     <li>{% a 'list(append)' '#main' 'list' insert="append" multi=True %}</li>
@@ -19,7 +19,7 @@
     <li>{% a 'create' '#main' 'create' insert="append" %}</li>
     <li>{% a 'update' '#main' 'update' 4 insert="append" %}</li>
     <li>{% a 'delete' '#main' 'delete' 4 insert="replace" %}</li>
-    <li>{% a '404(prepend)' '#main' '/asdfdsf/sdfsa/sf' insert="replace" %}</li>
+    <li>{% a '404(prepend)' '#main' '/asdfdsf/sdfsa/sf' insert="replace" %}</li></ul>
 </nav>
 <div id="main">
     {% block content %}
