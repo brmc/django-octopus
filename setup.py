@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  Copyright (c) 2014 Brian McClure
+#  Copyright (c) 2017 Brian McClure
 #
 #  django-octopus is free software under terms of the MIT License.
 #
@@ -15,7 +15,7 @@ setup(
     version='0.4',
     packages=find_packages(),
     include_package_data=True,
-    requires=['python (>= 2.7)', 'python (>= 3.3)', 'django (>= 1.6)'],
+    requires=['python (>= 3.6)', 'django (>= 1.8)'],
     description='A simple AJAX pull framework for django, now with full' \
                 'featured demo',
     author='Brian McClure',
@@ -29,9 +29,6 @@ setup(
         'Framework :: Django',
         'Intended Audience :: Developers',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
 )
