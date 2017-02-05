@@ -53,7 +53,7 @@ def create_context(href: str,
 
     class_ = kwargs.pop('class', '')
 
-    extra_params = ' '.join([f'{key}="{val}"' for key, val in kwargs.items()])
+    extra_params = ' '.join([f' {key}="{val}"' for key, val in kwargs.items()])
 
     return {
         'target': target,
