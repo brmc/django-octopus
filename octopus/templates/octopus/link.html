@@ -1,7 +1,6 @@
-<a {% if id %}id="{{ id }}" {% endif %}
-   data-oc-target="{{ target }}"
+<a data-oc-target="{{ target }}"
    data-oc-insert="{{ insert }}"
    data-oc-method="{{method}}"
    class="octopus-link{% if class %} {{ class }}{% endif %}"
    href="{{ href }}"
-   data-oc-multi="{{ multi }}">{{ text }}</a>
+   data-oc-multi="{{ multi }}"{{ extra_params }}>{{ text }}</a>
