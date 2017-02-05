@@ -11,15 +11,17 @@
 </head>
 <body>
 <nav>
-    <ul><li>{% a 'home(replace)' 'body' 'home' multi=False %}</li>
-    <li>{% a 'fragment(replace)' '#main' 'fragment' multi=True %}</li>
-    <li>{% a 'detail(replace)' '#main' 'detail' 1 title="balls"%}</li>
-    <li>{% a 'list(append)' '#main' 'list' insert="append" multi=True %}</li>
-    <li>{% a 'archive(prepend)' '#main' 'archive' insert="prepend" %}</li>
-    <li>{% a 'create' '#main' 'create' insert="append" %}</li>
-    <li>{% a 'update' '#main' 'update' 4 insert="append" %}</li>
-    <li>{% a 'delete' '#main' 'delete' 4 insert="replace" %}</li>
-    <li>{% a '404(prepend)' '#main' '/asdfdsf/sdfsa/sf' insert="replace" %}</li></ul>
+    <ul>
+        <li>{% a 'home' text='home(replace)' target='body' multi=False %}</li>
+        <li>{% a 'fragment' text='fragment(replace)' target='#main' multi=True %}</li>
+        <li>{% a 'detail' 1 text='detail(replace)' target='#main' title="balls"%}</li>
+        <li>{% a 'list' text='list(append)' target='#main' insert="append" multi=True %}</li>
+        <li>{% a 'archive' text='archive(prepend)' target='#main' insert="prepend" %}</li>
+        <li>{% a 'create' text='create' target='#main' insert="append" %}</li>
+        <li>{% a 'update' 4 text='update' target='#main' insert="append" %}</li>
+        <li>{% a 'delete' 4 text='delete' target='#main' insert="replace" %}</li>
+        <li>{% a '/asdfdsf/sdfsa/sf' text='404(prepend)' target='#main'  insert="replace" %}</li>
+    </ul>
 </nav>
 <div id="main">
     {% block content %}
