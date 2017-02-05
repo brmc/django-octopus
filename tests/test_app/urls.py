@@ -8,7 +8,7 @@ from .views import DetailView, ListView, SuffixView, \
     ArchiveIndexView, DayArchiveView, WeekArchiveView, MonthArchiveView, \
     TodayArchiveView, UpdateView, CreateView, DeleteView, FragmentView
 
-url_list = [
+urlpatterns = [
     url(r'^/?$', TemplateView.as_view(template_name='base.html'), name="home"),
     url(r'^frag/?$', FragmentView.as_view(), name="fragment"),
     url(r'^create/$', CreateView.as_view(), name="create"),
@@ -31,13 +31,3 @@ url_list = [
         name='month'),
     url(r'^today/$', TodayArchiveView.as_view(), name='today'),
 ]
-
-if VERSION >= (1,10):
-    urlpatterns = url_list
-else:
-    from django.conf.urls import patterns
-    urlpatterns = patterns(
-        '',
-        *url_list
-    )
-
