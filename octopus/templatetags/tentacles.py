@@ -4,50 +4,45 @@ from collections import OrderedDict
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse, NoReverseMatch
+from django.forms import Form
+from django.template.smartif import key
+
 from octopus import settings
 
 register = template.Library()
 
 
-def create_html_tag(text, target, href, *href_args, **kwargs):
+def create_context(href: str,
+                   *href_args,
+                   text: str,
+                   target: str,
+                   insert: str='replace',
+                   method: str='get',
+                   multi: bool=True,
+                   **kwargs) -> dict:
     """
-    builds a link that can be used by static/octopus.js.
 
-
-    Arguments:
-    :param text: This varies depending on the calling function.  See below for
-        more details.
-    :type text: str
-    :param target: The html element, class, or id to catch the returned data
-    :type target: str with the selector prefix if applicable: body, .className,
-        #idname
-    :param insert: Dictates how to handle the incoming data. Allowed values:
-        replace, append, prepend.
-        Defaults to replace
-    :type insert: str
-    :param href: The name of the url pattern defined in your urls.py
-    :type href: str
-    :param href_args: Any arguments to be passed to this url
-    :param kwargs: Expected kwargs(with default in parentheses):
-        method("get"), insert("replace"), classes(None), id(None), title(None)
-    :type kwargs: dict
-    :return: OrderedDict
+    :param href: a url name or a raw url
+    :param href_args: optional arguments to be passed to
+    django.core.urlresolvers.reverse
+    :param text: the clickable text
+    :param target: a dom id where the response will be injected
+    :param insert: how the content will be injected. Possible values:
+    replace, append, prepend, self
+    :param method: HTTP method
+    :param multi: whether a link may be clicked multiple times
+    :param kwargs: any kwarg will be forwarded to the template in the format:
+        `key1="val" key2="val2"`
     """
 
     try:
         href = reverse(href, args=href_args)
     except NoReverseMatch:
-        if settings.ALLOW_MANUAL is True:
-            href = href
-        else:
+        if settings.ALLOW_MANUAL is not True:
             raise NoReverseMatch
 
-    # I'm setting default values here rather than above so that the tag would
-    # be easier to use and feel more natural.
-    method, insert, multi, classes, id_ = \
-        map(kwargs.get,
-            ['method', 'insert', 'multi', 'class', 'id'],
-            ['get', 'replace', True, '', ''])
+        href = href
+
 
     if insert.lower() not in ['replace', 'append', 'prepend', 'self']:
         error_message = u"'{}' is not a valid value for insert. It " \
@@ -56,50 +51,56 @@ def create_html_tag(text, target, href, *href_args, **kwargs):
 
         raise ImproperlyConfigured(error_message)
 
-    return OrderedDict(
-        (('id', id_),
-         ('target', target),
-         ('insert', insert),
-         ('class', classes),
-         ('method', method),
-         ('href', href),
-         ('text', text),
-         ('multi', multi)))
+    class_ = kwargs.pop('class', '')
 
+    extra_params = ' '.join([f'{key}="{val}"' for key, val in kwargs.items()])
+
+    return {
+        'target': target,
+        'insert': insert,
+        'class': class_,
+        'method': method,
+        'href': href,
+        'text': text,
+        'multi': multi,
+        'extra_params': extra_params,
+    }
 
 @register.inclusion_tag('octopus/link.html')
-def a(text, target, href, *href_args, **kwargs):
+def a(*args, **kwargs) -> dict:
     """ Wrapper to create a link compatible with Octopus
 
-    :param href: a raw url or django url name
-    :param target: dom selector where ther response will be injected
-    :param text: The clickable text of the link
-    :type text: str
-    :returns: dict
+    :returns: dict: context object
     """
 
-    return create_html_tag(text, target, href, *href_args, **kwargs)
+    return create_context(*args, **kwargs)
 
 
 @register.inclusion_tag('octopus/form.html')
-def form(text, form, href, *href_args, **kwargs):
-    """ Wrapper to create a form compatible with Octopus
-
-    :param href:
-    :param form: an instance of a form
-    :type form: FormObject
-    :param text: The text that goes on the Submit button
-    :type text: str
-    :returns: dict
+def form(href: str,
+         *href_args,
+         form: Form,
+         text: str,
+         target: str,
+         insert: str = 'self',
+         method: str = 'post',
+         **kwargs) -> dict:
+    """
+    :param href: a url name or raw url set on the action property of a form
+    :param href_args: optional parameters to be passed to href
+    :param form: an instance of a form object
+    :param text: displayed on the submit button
+    :param target: a dom id where the response will be injected
+    :param insert: how the content will be injected. Possible values:
+    replace, append, prepend, self
+    :param method: HTTP method
+    :param kwargs:
+    :return:
     """
 
-    # Default values for forms should differ from regular links
-    kwargs['method'], kwargs['insert'], kwargs['multi'] = \
-        map(kwargs.get, ['method', 'insert', 'multi'],
-            ['post', 'self', 'True'])
+    context = create_context(
+        href, *href_args, text, target, insert, method, **kwargs)
 
-    context = create_html_tag(text, kwargs.pop('target', None),
-                              href, *href_args, **kwargs)
     context['form'] = form
 
     return context

@@ -102,104 +102,31 @@ parameters and their default values.
 
 ## v0.4
 
+### New features
+
+* Proxy templates are no longer used to switch between full and ajax 
+requests. You now just define blocks named `fragment` in your 
+templates.
+* Titles are included directly in the response.  Before, titles were  
+defined on the link itself. Now a `title` block is supported to define  
+title content
+* While loading, the target element fades to 30% opacity
+
+### Changes 
+
 * due to changes in django, new dependencies are required:
     
     'django.contrib.auth',
     'django.contrib.contenttypes'
+    
+* Changed default value for `multi` to `True`
+* Switched to using data-* html attributes
   
+### Javascript changes
+
 * Added javascript build commands: see `BUILD_INSTRUCTIONS.md` for details
 * Includes custom build of jQuery to use only the required components
-* While loading, the target element fades to 30%
 * Trivial javascript improvements
-* Titles are included directly in the response.  Before, titles were  
-defined on the link itself. Now a `title` block is supported to define  
-  title content
-* Switched to using data-* html attributes
-* Changed default value for `multi` to `True`
-
-## v0.3.1
-
-* removed deprecated template tag
-
-## v0.3.1
-
-* officially added support for django 1.8, 1.9, and 1.10 and python 3.5
-* removed support for EOL versions of django
-
-## v0.3
-
-### Bug fixes
-
-* fixed bug in the javascript that prevented replaceState() from being called
-in FireFox
-
-### Changes
-
-* a `title` is now required to engaged the forward/back behavior
-
-* `multi` default value for forms changed to `True`
-
-* the behavior of `self` was modified to fully replace the containing element,
-  so be sure a single node encapsulates your template fragments if using
-  `self`
-
-
-## v0.2.1
-
-## Bug fixes
-
-* Corrected error message from ImproperlyConfigured `tentacles.py` to display 
- the incorrect value
- 
-* JS files weren't updating the title.  
-
-## v0.2
-
-### Changes
-
-* `action` attribute in the template tags was changed to `insert` to avoid
-conflicts with form attributes.  This is NOT backwards compatible.
-
-* The div that wraps elements that were prepended or appended has been removed
-
-* Changed the name of the file in the template tag from `a.py` to
-`tentacles.py`. `{% load a %}` is deprecated.  Change it to
-`{% load tentacles %}`
-
-
-### Features
-
-* Create-, Update-, and DeleteViews support added and tested.
-
-* New template tag to create forms
-
-* Added `self` to allowed `insert` methods.  This is similar to `replace` but
-in case several nodes have been appended or prepended, it only replaces the
-exact node in question rather than overwriting the contents of the entire
-`target`.  This allows for creating, editing, or deleting multiple models in
-place and saving them individually. If `insert="self"` is set, `target` is
-ignored.
-
-* `multi` attribute added to template tags to prevent or allow multiple clicks 
-on a link.  
-    **Default: False**
-
-* When elements are loaded they are given a class corresponding to their 
-insertion method so you can hook into them if you wish.   
-**Naming schema** octopus-<insert method>, e.g. `octopus-append`
-
-
-### v0.1
-
-#### Features
-
-* New generic class-based views that correspond to DetailView, ListView, 
- ArchiveIndexView, DayArchiveView, TodayArchiveView, DateDetailView, 
- WeekArchiveView, MonthArchiveView, and YearArchiveView
- 
-* A mixin(AjaxResponseMixin) to be used on pre-existing CBVs
-
-* A template tag to generate octopus-compatible links
 
 
 ## Requirements ##

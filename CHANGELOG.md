@@ -2,18 +2,32 @@
 
 ## v0.4
 
-* due to changes in django, new dependencies are required:
+### New features
 
+* Proxy templates are no longer used to switch between full and ajax 
+requests. You now just define blocks named `fragment` in your 
+templates.
+* Titles are included directly in the response.  Before, titles were  
+defined on the link itself. Now a `title` block is supported to define  
+title content
+* While loading, the target element fades to 30% opacity
+
+### Changes 
+
+* due to changes in django, new dependencies are required:
+    
     'django.contrib.auth',
     'django.contrib.contenttypes'
+    
+* Changed default value for `multi` to `True`
+* Switched to using data-* html attributes
+  
+### Javascript changes
 
 * Added javascript build commands: see `BUILD_INSTRUCTIONS.md` for details
 * Includes custom build of jQuery to use only the required components
-* While loading, the target element fades to 30%
 * Trivial javascript improvements
-* Titles are included directly in the response.  Before, titles were  
-defined on the link itself. Now a `title` block is supported to define  
-  title content
+
 
 ## v0.3.2
 
