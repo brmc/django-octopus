@@ -1,11 +1,10 @@
-<form id=""
-      class="octopus-form"
+<form class="octopus-form"
       action="/"
       method="post"
       data-oc-method="post"
       data-oc-insert="self"
       data-oc-multi="True"
-      data-oc-target="None">
+      data-oc-target="None" >
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="submit" />

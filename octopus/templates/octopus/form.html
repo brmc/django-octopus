@@ -5,7 +5,7 @@
       data-oc-insert="{{ insert }}"
       data-oc-multi="{{ multi }}"
       data-oc-target="{{ target }}"
-      {{ extra_params }}>
+      {{ extra_params|safe }}>
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="{{ text }}" />

@@ -14,31 +14,31 @@ class ViewsTest(TestCase):
         self.n.save()
 
     def test_get_context_data(self):
-        response = self.client.get('/detail/%d' % self.m.id, {},
+        response = self.client.get(f'/detail/{self.m.id:d}', {},
                                    HTTP_X_REQUESTED_WITH="XMLHttpRequest")
 
         base_template = response.context['base_template']
         self.assertTrue("octopus/ajax.html" == base_template)
 
-        response = self.client.get('/detail/%d' % self.m.id, {})
+        response = self.client.get(f'/detail/{self.m.id}', {})
 
         base_template = response.context['base_template']
         self.assertTrue("base.html" == base_template)
 
     def test_fragment_response(self):
-        response = self.client.get('/detail/%d' % self.m.id, {},
+        response = self.client.get(f'/detail/{self.m.id:d}', {},
                                    HTTP_X_REQUESTED_WITH="XMLHttpRequest")
 
         conversation = response.content.strip()
 
         self.assertTrue(
-            conversation.startswith('Fancy people talking about fancy dances'))
+            conversation.startswith(b'Fancy people talking about fancy dances'))
 
-        self.assertTrue('The truth' not in conversation)
+        self.assertTrue(b'The truth' not in conversation)
         self.assertTrue(
-            conversation.endswith('Loneliness, violence, and peanut butter'))
+            conversation.endswith(b'Loneliness, violence, and peanut butter'))
 
     def test_full_response(self):
         response = self.client.get('/list/', {}).content.strip()
 
-        self.assertTrue('too much milksteak' in response)
+        self.assertTrue(b'too much milksteak' in response)

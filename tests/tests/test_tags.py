@@ -1,5 +1,4 @@
 import re
-from collections import OrderedDict
 from django.forms.models import ModelForm
 from django.template.loader import render_to_string
 from django.test import TestCase
@@ -11,6 +10,7 @@ from octopus.templatetags.tentacles import form
 def remove_whitespace(rendered):
     return re.sub('\s{2,}', ' ', rendered)
 
+TestCase.maxDiff = None
 
 class TestA(TestCase):
     def setUp(self):
@@ -24,18 +24,18 @@ class TestA(TestCase):
             'class': "poop",
             'id': "man"
         }
-        expected = OrderedDict((
-            ('id', 'man'),
-            ('target', 'target'),
-            ('insert', 'append'),
-            ('class', 'poop'),
-            ('method', 'get'),
-            ('href', '/detail/1'),
-            ('text', 'text'),
-            ('multi', True)
-        ))
+        expected = {
+            'target': 'target',
+            'insert': 'append',
+            'class': 'poop',
+            'method': 'get',
+            'href': '/detail/1',
+            'text': 'text',
+            'multi': True,
+            'extra_params': ' id="man"'
+        }
 
-        actual = a("text", "target", "detail", self.id, **kwargs)
+        actual = a("detail", self.id, text="text", target="target", **kwargs)
 
         self.assertEqual(actual, expected)
 
@@ -44,19 +44,19 @@ class TestA(TestCase):
             'insert': "prepend",
             'method': 'get',
             'class': "poop",
-            'id': "man"
         }
-        expected = OrderedDict((
-            ('id', 'man'),
-            ('target', 'target'),
-            ('insert', 'prepend'),
-            ('class', 'poop'),
-            ('method', 'get'),
-            ('href', '/multi/1/a'),
-            ('text', 'text'),
-            ('multi', True)
-        ))
-        actual = a("text", "target", "multi", self.id, 'a', **kwargs)
+
+        expected = {
+            'target': 'target',
+            'insert': 'prepend',
+            'class': 'poop',
+            'method': 'get',
+            'href': '/multi/1/a',
+            'text': 'text',
+            'multi': True,
+        }
+
+        actual = a("multi", self.id, 'a', text='text', target='target', **kwargs)
 
         self.assertEqual(actual, expected)
 
@@ -67,17 +67,17 @@ class TestA(TestCase):
             'id': "man"
         }
 
-        actual = a("text", "target", "list", **kwargs)
-        expected = OrderedDict((
-            ('id', 'man'),
-            ('target', 'target'),
-            ('insert', 'replace'),
-            ('class', 'poop'),
-            ('method', 'post'),
-            ('href', '/list/'),
-            ('text', 'text'),
-            ('multi', True)
-        ))
+        actual = a("list", text="text", target="target", **kwargs)
+        expected = {
+            'target': 'target',
+            'insert': 'replace',
+            'class': 'poop',
+            'method': 'post',
+            'href': '/list/',
+            'text': 'text',
+            'multi': True,
+            'extra_params': ' id="man"'
+        }
 
         self.assertEqual(actual, expected)
 
@@ -89,32 +89,33 @@ class TestA(TestCase):
         }
 
         context = a(
-            "text",
-            "target",
             "detail",
             self.id,
+            text="text",
+            target="target",
             **kwargs)
 
         rendered = render_to_string('octopus/link.html', context)
         actual = remove_whitespace(rendered)
 
-        raw = '<a id="man" ' \
+        raw = '<a ' \
               'data-oc-target="target" ' \
               'data-oc-insert="append" ' \
               'data-oc-method="get" ' \
               'class="octopus-link poop" ' \
               'href="/detail/{:d}" ' \
-              'data-oc-multi="True">text</a>'
+              'data-oc-multi="True" ' \
+              'id="man">text</a>'
         expected = raw.format(self.id)
 
         self.assertEqual(actual, expected)
 
     def test_render_template_no_kwargs(self):
         context = a(
-            "text",
-            "target",
             "detail",
             self.id,
+            text="text",
+            target="target",
             insert="prepend")
 
         rendered = render_to_string('octopus/link.html', context)
@@ -138,10 +139,11 @@ class TestForm(TestCase):
             fields = ('date',)
 
     def test_render_minimum_form(self):
+        self.maxDiff = None
         context = form(
-            "submit",
-            self.MForm,
-            "/")
+            "/",
+            text="submit",
+            form=self.MForm)
 
         actual = render_to_string('octopus/form.html', context)
         actual = remove_whitespace(actual)
@@ -161,9 +163,9 @@ class TestForm(TestCase):
         }
 
         context = form(
-            "submit",
-            self.MForm,
             "/",
+            text="submit",
+            form=self.MForm,
             **kwargs)
 
         actual = render_to_string('octopus/form.html', context)

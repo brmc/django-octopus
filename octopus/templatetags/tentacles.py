@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from collections import OrderedDict
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse, NoReverseMatch
-from django.forms import Form
+from django.forms import Form, BaseForm
 from django.template.smartif import key
 
 from octopus import settings
@@ -53,9 +52,7 @@ def create_context(href: str,
 
     class_ = kwargs.pop('class', '')
 
-    extra_params = ' '.join([f' {key}="{val}"' for key, val in kwargs.items()])
-
-    return {
+    context = {
         'target': target,
         'insert': insert,
         'class': class_,
@@ -63,8 +60,14 @@ def create_context(href: str,
         'href': href,
         'text': text,
         'multi': multi,
-        'extra_params': extra_params,
     }
+
+    params = [f' {key}="{val}"' for key, val in kwargs.items()]
+
+    if params:
+        context['extra_params'] = ' '.join(params)
+
+    return context
 
 @register.inclusion_tag('octopus/link.html')
 def a(*args, **kwargs) -> dict:
@@ -79,11 +82,11 @@ def a(*args, **kwargs) -> dict:
 @register.inclusion_tag('octopus/form.html')
 def form(href: str,
          *href_args,
-         form: Form,
+         form: BaseForm,
          text: str,
-         target: str,
-         insert: str = 'self',
-         method: str = 'post',
+         target: str=None,
+         insert: str='self',
+         method: str='post',
          **kwargs) -> dict:
     """
     :param href: a url name or raw url set on the action property of a form
@@ -99,7 +102,7 @@ def form(href: str,
     """
 
     context = create_context(
-        href, *href_args, text, target, insert, method, **kwargs)
+        href, *href_args, text=text, target=target, insert=insert, method=method, **kwargs)
 
     context['form'] = form
 

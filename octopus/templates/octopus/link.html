@@ -3,4 +3,4 @@
    data-oc-method="{{method}}"
    class="octopus-link{% if class %} {{ class }}{% endif %}"
    href="{{ href }}"
-   data-oc-multi="{{ multi }}"{{ extra_params }}>{{ text }}</a>
+   data-oc-multi="{{ multi }}"{{ extra_params|safe }}>{{ text }}</a>
