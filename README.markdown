@@ -1,5 +1,5 @@
-This package is ahead of pypi and the instructions no longer apply  
-to versions installed from there.
+This package is ahead of pypi so the instructions no longer apply  
+to versions installed with package managers.
 
 [![Build Status](https://travis-ci.org/brmc/django-octopus.svg?branch=master)](https://travis-ci.org/brmc/django-octopus)
 

@@ -1,10 +1,14 @@
 # Changelog
 
+This is an aggressive update that breaks backwards compatibility in  
+just about every way, but seeing that no one really uses it, the fallout  
+should be minimal :)
+
 ## v0.4
 
 ### New features
 
-* Proxy templates are no longer used to switch between full and ajax 
+* Proxy templates are no longer used to switch between full and ajax  
 requests. You now just define blocks named `fragment` in your 
 templates.
 * Titles are included directly in the response.  Before, titles were  
@@ -14,10 +18,22 @@ title content
 
 ### Changes 
 
-* due to changes in django, new dependencies are required:
+* removed support for python < 3.6
+* due to changes in django, new installed apps are required: 
+   
+   INSTALLED_APPS = (
+        ...
+        'django.contrib.auth',
+        'django.contrib.contenttypes'
+        ...
+   )
     
-    'django.contrib.auth',
-    'django.contrib.contenttypes'
+* changed the template tags' signatures to resemble the typical order of  
+html tag attributes:  
+
+    \<a href='/home' data-oc-target="#main">text\</text>
+
+    {% a '/home' target='#main' text='text' %}
     
 * Changed default value for `multi` to `True`
 * Switched to using data-* html attributes
@@ -26,7 +42,8 @@ title content
 
 * Added javascript build commands: see `BUILD_INSTRUCTIONS.md` for details
 * Includes custom build of jQuery to use only the required components
-* Trivial javascript improvements
+* Trivial javascript improvements, still needs a lot of work before a  
+1.0 release
 
 
 ## v0.3.2
