@@ -1,12 +1,6 @@
 language: python
 python:
   - "3.6"
-addons:
-  apt:
-    sources:
-      - deadsnakes
-    packages:
-      - python3.6
 install:
   - pip install tox
 script:
