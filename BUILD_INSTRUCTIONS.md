@@ -28,7 +28,7 @@ Look in package.json for the most up-to-date list
 | build          | installs the js library into the python package |
 | build-test     | runs `collectstatic` from within `tests` |
 | build-all      | runs `build` and `build-test` |
-| build-jquery   | custom builds jquery 2.1.1 with the minimum required components: ajax, css, effects, and events |
+| build-jquery   | custom builds jquery with the minimum required components: ajax, css, effects, and events |
 | install-jquery | installs jquery into the python package |
 
 #### tip: set up a file watcher to automatically run build-all as you  

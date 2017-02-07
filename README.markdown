@@ -1,26 +1,22 @@
+This package is ahead of pypi and the instructions no longer apply  
+to versions installed from there.
+
 [![Build Status](https://travis-ci.org/brmc/django-octopus.svg?branch=master)](https://travis-ci.org/brmc/django-octopus)
 
 # **django-octopus** #
 
-Octopus is a lightweight AJAX pull framework for django, allowing
-pages to be loaded or refreshed modularly.
+Octopus is a lightweight AJAX pull framework for django that uses a  
+purely declarative syntax to load or refresh pages modularly.
 
-[Click here to see a full-featured demo.](http://mcclure.pw/demo).  The 
-demo is still a bit rough around the edges, and has only been tested in Chrome 
-and FireFox.  Chrome looks best because there's some wonky problem with the 
-menu transitioons on FireFox.  The responsiveness is lazy and violates 
-accessibility, and there is no mobile version. But otherwise, it looks and 
-works great!! :D
+[Click here to see a full-featured demo.](http://mcclure.pw/demo).   
+The content of the demo hasn't been updated to match the changes with  
+version 0.4.  It behaves the same from the end-user perspective,  
+but the information is no longer accurate
 
 ## Contents
 
 * [Quick start](#quick-start)
 * [Changelog (Recent changes only)](#changelog-recent-changes)
-  * [v0.3.2](#V032)
-  * [v0.3.1](#V031)
-  * [v0.3](#V03)
-  * [v0.2](#V02)
-  * [v0.1](#v01)
 * [How does it work?](#how-does-it-work)
 * [Requirements](#requirements)
 * [Installation](#installation)
@@ -53,7 +49,8 @@ works great!! :D
         ...
     )
   
-You may need to restart your development server to detect the template tags.  
+You may need to restart your development server to detect the template  
+tags.  
 
 3\. Add javascript:
 
@@ -74,37 +71,63 @@ You may need to restart your development server to detect the template tags.
         template_name = "<template name>"
         base_template = '<some base template>'
 
-where `base_template` is the parent of `template_name`
+where `template_name` extends `base_template` 
 
-See [Usage](#views) for more detail information on using generic views or on 
-writing your own functional views.
+See [Usage](#views) for more detail information on using generic views  
+or on writing your own functional views.
 
-5\. Create your links.  Manually, :
+5a\. When extending a template, use the context variable `base_template`  
+instead of a string literal:
+
+Do this:
+
+    {% extends base_template %}
+    
+Not this:
+
+    {% extends 'base.html' %}
+
+5b\. In the same template, create a {% block fragment %} and optionally  
+ a {% block title %}
+ 
+    {% block title %}<title>Detail View </title>{% endblock fragment %}
+    {% block fragment %}<div> some content </div>{% endblock fragment %}
+
+6\. In another template, link to the first template.  
+
+Manually:
 
     <a href="{% url 'detail' object.id %}" 
        class="octopus-link"
        data-oc-target="#container" 
-       data-oc-insert="replace" 
-       data-oc-method="get" 
        >Link Text</a>
 
-or or with a template tag
+or with a template tag:
 
-    {% a 'Link Text' '#container' 'detail' object.id insert="replace" method="get" title="New title %}
+    {% a 'detail' object.id target='#container' text='Link Text' %}
 
-See [Usage](#template-tags) for details on what these parameters mean and other 
-parameters and their default values.
+Where `#container` is the selector of a DOM element that already  
+exists in your template  
 
-6\. Putting it all together, a template might look like [this](#creating-templates)
+See [Usage](#template-tags) for details on what these parameters mean  
+and other parameters and their default values.
+
+
+7\. Putting it all together, a template might look like  
+[this](#creating-templates)
 
 
 ## Changelog (Recent Changes)
 
 ## v0.4
 
+This is an aggressive update that breaks backwards compatibility in  
+just about every way, but seeing that no one really uses it, the fallout  
+should be minimal :)
+
 ### New features
 
-* Proxy templates are no longer used to switch between full and ajax 
+* Proxy templates are no longer used to switch between full and ajax  
 requests. You now just define blocks named `fragment` in your 
 templates.
 * Titles are included directly in the response.  Before, titles were  
@@ -114,10 +137,22 @@ title content
 
 ### Changes 
 
-* due to changes in django, new dependencies are required:
+* removed support for python < 3.6
+* due to changes in django, new installed apps are required: 
+   
+   INSTALLED_APPS = (
+        ...
+        'django.contrib.auth',
+        'django.contrib.contenttypes'
+        ...
+   )
     
-    'django.contrib.auth',
-    'django.contrib.contenttypes'
+* changed the template tags' signatures to resemble the typical order of  
+html tag attributes:  
+
+    \<a href='/home' data-oc-target="#main">text\</text>
+
+    {% a '/home' target='#main' text='text' %}
     
 * Changed default value for `multi` to `True`
 * Switched to using data-* html attributes
@@ -126,28 +161,17 @@ title content
 
 * Added javascript build commands: see `BUILD_INSTRUCTIONS.md` for details
 * Includes custom build of jQuery to use only the required components
-* Trivial javascript improvements
-
+* Trivial javascript improvements, still needs a lot of work before a  
+1.0 release
 
 ## Requirements ##
 
-1. Python 2.7, 3.4, 3.5, 3.6
+1. Python 3.6+
 
-2. Django, v1.10+
+2. Django, v1.8+
 
 3. jQuery 1.11+ (A custom build is provided that only uses the  
 minimum required components) 
-
-## How does it work?
-
-Special links are created using a template tag that are intercepted when 
-clicked by a simple jQuery script and routed via AJAX to views that are 
-defined to conditionally render a full template when one navigates 
-directly to a URL(or if javascript is unavailable) or to render a specific 
-portion of the template if requested via AJAX(will be made more descriminating 
-later).  The HTML returned by the server is then inserted into a node in the 
-DOM specified by a link attribute. Browser states are updated to preserve full 
-back/forward functionality.
 
 ## Installation ##
 
@@ -172,33 +196,46 @@ A `RunTimeError` will be thrown if auth and contenttypes are not loaded
 
 jQuery is required. If you're not using it already, a custom build is  
 provided that only uses the `css`, `ajax`, `events`, and `effects`  
-components of jQuery. It is built off of v2.1.1.
+components of jQuery.
 
-jQuery should be loaded before `octopus.js`
+If you're new to this, jQuery should be loaded before `octopus.js`
 
     <script src="{% static 'octopus/custom-jquery.js' %}"></script>
     <script src="{% static 'octopus/octopus.js' %}"></script>
-   
+
+## How does it work?
+
+In the client, you create links or forms with various  
+data-attributes to determine how content should be handled  
+once it is retrieved from the server. All behavior is defined  
+declaratively meaning it's not necessary to write any javascript.  
+
+When a user navigates directly to a url, the page is rendered in full  
+like expected, but when a link is clicked or a form submitted, it is  
+intercepted and routed to the server via ajax where your django  
+app then returns only the content of your template defined in a   
+`{% block fragment %}`
+
+The response is then inserted into the target node(s) defined on the  
+clicked element. Browser states are updated to preserve full  
+back/forward functionality.  
+
 
 ## Usage ##
 
-There's just three main steps:
+There's three main steps:
 
-1. Create your views
+1. Create your view
 
-2. Create your links (with or without the template tag)
+2. Create your link or form
 
-3. Create your templates
+3. Create your template(s)
 
 ### Views ###
 
 #### Creating Class-Based Views ####
 
-Generic views have been created for the detail, list, time-based, and update 
-views following the naming convention of tacking `Octopus` onto existing view 
-names: `Octopus<OriginalViewName>`.  If that doesn't make sense, here's 
-an explicit list of the available views with their 
-respective counter parts:
+Generic views have been created for the following class-based views:
 
 | Octopus View            |      Django View |
 |-------------------------|------------------|
@@ -217,32 +254,23 @@ respective counter parts:
 | OctopusDeleteView       | DeleteView       |
 | OctopusFormView         | FormView         |
 
-You use these just as you would the normal CBV's.  The only difference is that 
-You also need to define a `fragment_name` in addition to the `template_name` 
+You use these as you would normal CBV's.  The only additional requirement  
+is that you need to define `base_template` in addition to `template_name` 
 
     from octopus.views import OctopusDetailView
     from yourapp.models import YouModel
     
     class YourDetailView(OctopusDetailView):
         model = YourModel
-        template_name = "puzzle.html"
-        fragment_name = "puzzlepiece.html"
+        base_template = "base.html"
+        template_name = "template.html"
         
-But if you don't feel like defining the fragment names, just like 
-`template_suffix`, a `fragment_suffix` of `'_fragment` has been provided.  So 
-you can just name your templates accordingly.  But note, the `fragment_suffix` 
-is appened **after** the `template_suffix`, so if your full template was called 
-
-    yourapp/yourmodel_detail.html
-    
-then your fragment template should be called
-
-    yourapp/yourmodel_detail_fragment.html
+`base_template` will be sent as a context variable and should be used  
+in the `extends` tag instead of the string literal. More on that later.  
 
 
-**If you are using the update views, you should be sure your `success_url` also 
-returns a template fragment**
-
+**If you are using the update views, you should be sure your 
+`success_url` also returns a template fragment**
 
 #### Creating Function-Based Views
 
@@ -251,110 +279,106 @@ The only caveat is to wrap your template definition in an `is_ajax()` method:
     def your_vew(request, *args, **kwargs):
         ...
         if request.is_ajax():
-            template = "template_fragment.html"
+            base_template = "octopus/ajax.html"
         else:
-            template = "full_template.html"
+            base_template = "base.html"
         ...
+        
+        context['base_template'] = base_template
 
+`octopus/ajax.html` is a real template and should be included exactly as  
+written above
 
 #### Using the AjaxResponseMixin with existing views ####
-
 
 You can convert your existing CBV's into OctopusViews like so:
 
     from octopus.views import AjaxResponseMixin 
     
     class YourView(AjaxResponseMixin, YourCustomBaseView):
-        parent = YourCustomBaseView
+        base_name = "weeedoo.html"
         template_name = "weeewoo.html"
-        fragment_name = "weeedoo_fragment.html"
-        ...
         
-`parent` is defined so get_template_names() can be called in case something 
- goes wrong.
-
+        
 ### Template Tags ###
+
+Be sure to load the `tentacles` tags
+
+    {% load tentacles %}    
 
 #### a ####
 
-Only the first three arguments are requried, but in your template, you would 
-build a full link like so: 
+Here is the method signature of the tag: 
+
+    a(href: str,
+      *href_args,
+      text: str,
+      target: str,
+      insert: str='replace',
+      method: str='get',
+      multi: bool=True,
+      **kwargs) -> dict:
+
+
+* **href**: the name of the url as defined in your urlconfs or a  
+hard-coded url
+
+* **href_args**: parameters will be passed to  `django.urls.resolvers.reverse`
+
+* **text**: the visible, clickable text of the link.
+ 
+* **target**: the selector of the html node(s) that will receive the  
+server response. E.g., `main`, `#container`, `.container`
+ 
+* **method**: the HTTP Method to use when making the request.  
+    **default** `get`
+
+* **insert**: how the incoming text will be inserted into the document  
+  **values**: `replace`, `prepend`, `append`, `self`   
+  **default**: `replace`  
+  **note**: `self` is similar to `replace`, but rather than overwriting 
+    everything in the entire node, `self` replaces just the object in 
+    question.  This is particularly useful for editing forms.
+* **multi**: whether a link may be click multiple times
+    **default**: True
+* **kwargs**: arbitrary parameters will be converted to html attributes  
+
+Here is a minimal example:  
 
     {% load tentacles %}
+
+    {% a '/home' target='#main' text='click me' %}
+
+Here is a full example
     
-    {% a "Link Text" "#container" "detail" object.id method="post" insert="prepend" id="cantelope" classes="inline-block article" %}
+    {% a "detail" object.id target="#container" text="Link Text" method="post" insert="prepend" id="cantelope" class="inline-block article" data-some-random-attr='1' %}
     
-This would create an anchor with the id `cantelope` and classes `octopus-link`, 
-`inline-block, article`. `octopus-link` is added automatically to provide 
-the necessary functionality. When clicked, the link would make a request to 
-the url/path rendered from the url named `detail` passing it the `object.id` 
-via a `POST` request. The HTML returned would then be prepended to `#container`, 
-and the document would be give a new title.
-
-**note: to engage the back/forward functionality, be sure to give a title, 
-otherwise the browser state will not be updated**
-
-The order for the template tags are: 
-
-Link text, target element, url name, url arguments, kwargs. 
-
-* **Link Text**: the visible, clickable text for the link.
- 
-* **Target Element**: the html node that will receive the rendered template 
-returned from the ajax request. E.g., `main`, `#container`, `.container`
-
-* **URL name**: the name of the url as defined in your urlconfs to be 
-passed to reverse(). If settings.OCTOPUS_ALLOW_MANUAL is set to True, you may 
-pass a hard-coded url.
-
-* **URL arguments**: as many parameters you wish/need to pass to reverse
- 
-* **Kwargs**:
-    * **method**: the HTTP Method with which you wish to make the ajax request.  
-    **Default** `get`
-    
-    * **insert**: how the incoming text will be inserted  
-      **values**: `replace`, `prepend`, `append`, `self`   
-      **Default**: `replace`  
-      **Note**: `self` is similar to `replace`, but rather than overwriting 
-        everything in the entire node, `self` replaces just the object in 
-        question.  This is particularly useful for editing forms.
-      
-    
-    * **classes**: a string of class names.  
-      **pass the names, rather than the selectors**: i.e., "class1, class2" rather than ".class1, .class2"   
-      **Default**: None
-    
-    * **id**: like above but for the Id.  
-      **Default**: None
     
 #### form ####
 
-The syntax is similar to the link tag:
+The syntax for a form is similar to the link tag:
 
     {% load tentacles %}
     
-    {% form "Button Text" form_instance request.path method="get" classes="monkeypus" id="create" insert="append" target="footer" %}
-
+    {% form request.path form=form_instance text="Button Text" %}
 
 A couple things to note.
 
-1. the second argument passed to the form tag is an instance of a form object
+1. a form instance is must be passed
 
-2. `target` becomes a kwarg because `insert=self` is more useful for forms and 
-  it supercedes anything defined by target. `target` can still be used as long 
-  as `insert` is redefined to be anything other than `self`
+2. `target` becomes optional because the default insertion method  
+`insert=self` is more useful for forms and supercedes anything  
+defined by target. `target` can still be used as long as `insert` is  
+redefined to be anything other than `self`
 
-
-3. Like "Link Text" above, "Button Text" will be the text on the submit button
-
-4. `request.path` is passed to `url_name`.  You can still pass named urls and 
-their arguments to the tag if you want to, but when dealing with the generic 
-edit views, if you use `request.path` you won't have to create individual forms 
-for each the views.  **make sure you include 
+4. `request.path` is passed to `url_name`.  You can still pass named urls and   
+their arguments to the tag if you want to, but when dealing with the generic  
+edit views, if you use `request.path` you won't have to create individual forms   
+for each view.  
+**make sure you include 
 `'django.core.context_processors.request',` in `TEMPLATE_CONTEXT_PROCESSORS`**
 
-The rest of the arguments remain the same.  The only difference are couple of 
+The rest of the arguments remain the same.  The only difference are couple of  
 the default values:
 
 * **Kwargs**
@@ -362,25 +386,28 @@ the default values:
     
     * **replace**: Default `self`
     
-**Note: the template uses form.as_p() by default**
+**Note: the template uses form.as_p()**
 
 ### Manually Creating Elements
 
 #### Creating Links ####
 
-The template tag only creates standard inline text links. If you want to 
+The template tags  create standard html tags. If you want to 
 create a link on an image or need some extra data attributes, you will have to 
 build the links yourself.
 
-But it's not hard. The only required attributes are:
+But it's not hard. Non-standard attributes (target, method, multi) are  
+ prefixed with `data-oc-`
+
+The only requirements are:
 
 * `href="..."`
 
-* `target="..."`
+* `data-oc-target="..."`
 
 * `class="octopus-link ..."`
 
-Then you can pass the kwargs as defined in [Template Tags](#a)
+Then you can set anything defined in [Template Tags](#a)
 
 #### Creating Forms ####
 
@@ -389,32 +416,36 @@ own form.  Beside the standard required attributes for forms, the only thing
 unique to octopus is to add a hook for the javascript:
  
     class="octopus-form ..."
+    
+and in adition to setting `method=` you need to set `data-oc-method=`
 
-Then you can pass the kwargs as defined in [Template Tags](#a)
+Then you can set anything defined in [Template Tags](#a)
 
 ### Creating templates ###
 
 A simple template schema that uses both links and forms might look something 
 like this:
 
-Base template:
+base_template = 'base.html':
 
     {% load static %}
     {% load tentacles %}
     <!doctype html>
     <html>
     <head>
+        {% block title %}
         <title>Document</title>
+        {% endblock title %}
     </head>
     <body>
-        {% a 'create object' 'main' 'create' %}
+        {% a 'create' text='create object' target='main' %}
         <main>
-            {% block content %}
-            {% endblock content %}
+            {% block fragment %}
+            {% endblock fragment %}
         </main>
         ...
         <footer>
-            <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
+            <script src="{% static 'octopus/custom-jquery.js' %}" type="text/javascript"></script>
             <script src="{% static 'octopus/both.js' %}" type="text/javascript"></script>
         </footer>
     </body>
@@ -422,16 +453,12 @@ Base template:
     
 model_form.html:
 
-    {% extends "base.html" %}
-    {% block content %}
-        {% include "model_form_fragment.html" %}
-    {% endblock %}
-
-model_form_fragment.html
-
+    {% extends base_template %}
     {% load tentacles %}
     
-    {% form 'Submit' form_instance request.path %}
+    {% block fragment %}        
+        {% form request.path text='Submit' form=form_instance %}
+    {% endblock %}
 
 ## Configuration ##
 
@@ -444,22 +471,8 @@ The determines whether hard-coded links may be passed to the template tag
 **Default**: `True`
 
 ## Todo ##
-
- * Make data-hooks html5 compliant
-
- * Create `fragment` template tag so new templates dont necessarily have to be 
- created.
-
- * Write some tests for AjaxResponseMixin
- 
- * Decorator for FBVs
- 
- * Make the determining factor the the template stricter so it's more than just 
- AJAX or not
  
  * Allow user more control over prepend, append, and replace behaviors: speed, 
   effects, etc.
   
  * Allow settings to be set per view rather than globally
- 
- * Add compatibility with django-media-helper
