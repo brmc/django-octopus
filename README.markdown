@@ -161,8 +161,9 @@ html tag attributes:
 
 * Added javascript build commands: see `BUILD_INSTRUCTIONS.md` for details
 * Includes custom build of jQuery to use only the required components
-* Trivial javascript improvements, still needs a lot of work before a  
-1.0 release
+*Trivial javascript improvements, still needs a lot of work before a  
+1.0 release. Jasmine tests are still missing
+
 
 ## Requirements ##
 
