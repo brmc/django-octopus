@@ -12,7 +12,7 @@ description = """"""
 
 setup(
     name='django-octopus',
-    version='0.4',
+    version='0.4.1',
     packages=find_packages(),
     include_package_data=True,
     requires=['python (>= 3.6)', 'django (>= 1.8)'],

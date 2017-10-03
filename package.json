@@ -1,6 +1,6 @@
 {
   "name": "django-octopus",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "[![Build Status](https://travis-ci.org/brmc/django-octopus.svg?branch=master)](https://travis-ci.org/brmc/django-octopus)",
   "main": "js/octopus.js",
   "directories": {

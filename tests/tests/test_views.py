@@ -14,7 +14,7 @@ class ViewsTest(TestCase):
         self.n.save()
 
     def test_get_context_data(self):
-        response = self.client.get(f'/detail/{self.m.id:d}', {},
+        response = self.client.get(f'/detail/{self.m.id}', {},
                                    HTTP_X_REQUESTED_WITH="XMLHttpRequest")
 
         base_template = response.context['base_template']
@@ -26,7 +26,7 @@ class ViewsTest(TestCase):
         self.assertTrue("base.html" == base_template)
 
     def test_fragment_response(self):
-        response = self.client.get(f'/detail/{self.m.id:d}', {},
+        response = self.client.get(f'/detail/{self.m.id}', {},
                                    HTTP_X_REQUESTED_WITH="XMLHttpRequest")
 
         conversation = response.content.strip()
