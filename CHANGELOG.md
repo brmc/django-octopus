@@ -1,10 +1,17 @@
 # Changelog
 
+## v0.4.1
+
+Bug fixes
+
+* Fixed title insertion and HTML parsin
+
+
+## v0.4
+
 This is an aggressive update that breaks backwards compatibility in  
 just about every way, but seeing that no one really uses it, the fallout  
 should be minimal :)
-
-## v0.4
 
 ### New features
 

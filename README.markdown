@@ -116,6 +116,13 @@ and other parameters and their default values.
 
 ## Changelog (Recent Changes)
 
+
+## v0.4.1
+
+Bug fixes
+
+* Fixed title insertion and HTML parsin
+
 ## v0.4
 
 This is an aggressive update that breaks backwards compatibility in  

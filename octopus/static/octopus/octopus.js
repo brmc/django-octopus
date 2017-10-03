@@ -94,7 +94,7 @@ $(function(){
 
             title = $(newContent).filter('title').text().trim();
 
-            newContent = $(newContent).not('title');
+            newContent = $(newContent).not('title').html();
 
             switch(insertionMethod){
                 case "append":
@@ -170,7 +170,7 @@ $(function(){
          * @param {string} data
          */
         function insertByMethod(data) {
-            var elem = $.parseHTML(data);
+            var elem = $($.parseHTML(data)).not('title');
             elem = $(elem).addClass("octopus-" + insertionMethod);
 
             $(elem).hide();
