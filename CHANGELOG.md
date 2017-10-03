@@ -5,7 +5,7 @@
 Bug fixes
 
 * Fixed title insertion and HTML parsin
-
+* Stopped propagation on clicks
 
 ## v0.4
 

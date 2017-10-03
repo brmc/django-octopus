@@ -1,291 +1,300 @@
-$(function(){
-    // Sets the initial state in the browser, so back/forward will
-    // work with the landing site
-    history.replaceState({
-        title: window.location.pathname,
-        target: 'body',
-        container: $('body').html()
-    }, $('title').text(), window.location.pathname);
+$(function () {
+  // Sets the initial state in the browser, so back/forward will
+  // work with the landing site
+  history.replaceState({
+    title: window.location.pathname,
+    target: 'body',
+    container: $('body').html(),
+  }, $('title').text(), window.location.pathname)
+
+  /**
+   * @param {Event} e
+   */
+  function prepareLinkRequest (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    var link = this
+    if (link.getAttribute('data-oc-multi') == 'False') {
+      $(link).disable()
+    }
+
+    var insertionMethod = link.getAttribute('data-oc-insert')
+    var request = new Request(link, insertionMethod, this.href)
+
+    request.submit()
+  }
+
+  function prepareFormRequest (e) {
+    e.stopPropagation()
+    e.preventDefault()
+
+    var form = this
+    var data = $(form).serializeArray()
+    var insertionMethod = form.getAttribute('data-oc-insert')
+    var request = new Request(form, insertionMethod, this.action, data)
+
+    request.submit()
+  }
+
+  $.fn.extend({
+    bindOctopus: function () {
+      let obj = $(this)
+
+      obj.off('click', '.octopus-link', prepareLinkRequest)
+        .on('click', '.octopus-link', prepareLinkRequest)
+
+      obj.off('submit', '.octopus-form', prepareFormRequest)
+        .on('submit', '.octopus-form', prepareFormRequest)
+
+      return this
+    },
+    disable: function () {
+      this.css({'pointer-events': 'none'})
+      $(this).off('click', 'octopus-link').removeClass('octopus-link')
+      return this
+    },
+  })
+
+  /**
+   *
+   * @param {HTMLElement} sourceElement
+   * @param {string} insertionMethod
+   * @param {string} href
+   * @param {Object} requestBody
+   */
+  function Request (sourceElement, insertionMethod, href, requestBody) {
+    requestBody = requestBody || {}
 
     /**
-     * @param {Event} e
+     * @type {string}
      */
-    function prepareLinkRequest(e){
-        e.preventDefault();
+    var target = sourceElement.getAttribute('data-oc-target')
 
-        var link = this;
-        if (link.getAttribute('data-oc-multi') == "False") {
-            $(link).disable();
-        }
+    /**
+     * @type {string}
+     */
+    var content
 
-        var insertionMethod = link.getAttribute('data-oc-insert');
-        var request = new Request(link, insertionMethod, this.href);
-
-        request.submit();
-    }
-
-    function prepareFormRequest(e){
-        e.preventDefault();
-        var form = this;
-        var data = $(form).serializeArray();
-        var insertionMethod = form.getAttribute('data-oc-insert');
-        var request = new Request(form, insertionMethod, this.action, data);
-
-        request.submit();
-    }
-
-    $.fn.extend({
-        bindOctopus: function(){
-            $(this).off('click', '.octopus-link', prepareLinkRequest)
-                .on('click', '.octopus-link', prepareLinkRequest);
-            $(this).off('submit', '.octopus-form',  prepareFormRequest)
-                .on('submit', '.octopus-form', prepareFormRequest);
-            return this;
-        },
-        disable: function(){
-            this.css({'pointer-events': 'none'});
-            $(this).off('click', 'octopus-link').removeClass('octopus-link');
-            return this;
-        }
-    });
+    /**
+     * @type {string}
+     */
+    var errorContent
 
     /**
      *
-     * @param {HTMLElement} sourceElement
-     * @param {string} insertionMethod
-     * @param {string} href
-     * @param {Object} requestBody
+     * @type {Object}
      */
-    function Request(sourceElement, insertionMethod, href, requestBody){
-        requestBody = requestBody || {};
+    var browserState = {}
 
-        /**
-         * @type {string}
-         */
-        var target = sourceElement.getAttribute('data-oc-target');
+    /**
+     * @type {string}
+     */
+    var title
 
-        /**
-         * @type {string}
-         */
-        var content;
+    /**
+     * @param {string} newContent
+     */
+    var parseResponseIntoTitleAndContent = function (newContent) {
+      var oldContent = $(target).html()
 
-        /**
-         * @type {string}
-         */
-        var errorContent;
+      title = $(newContent).filter('title').text().trim()
 
-        /**
-         *
-         * @type {Object}
-         */
-        var browserState = {};
+      newContent = $(newContent).not('title').html()
 
-        /**
-         * @type {string}
-         */
-        var title;
-
-        /**
-         * @param {string} newContent
-         */
-        var parseResponseIntoTitleAndContent = function(newContent){
-            var oldContent = $(target).html();
-
-            title = $(newContent).filter('title').text().trim();
-
-            newContent = $(newContent).not('title').html();
-
-            switch(insertionMethod){
-                case "append":
-                    content = oldContent + newContent;
-                    break;
-                case "prepend":
-                    content = newContent + oldContent;
-                    break;
-                case "replace":
-                default:
-                    content = newContent;
-            }
-        };
-
-        /**
-         * @param {Object} jqXHR
-         * @param {string} textStatus
-         * @param {string} errorThrown
-         */
-        var buildErrorContent = function(jqXHR, textStatus, errorThrown){
-            title = content = errorContent = jqXHR.status + " " + errorThrown;
-        };
-
-        /**
-         * @param {string} method
-         * @return {boolean}
-         */
-        function isMethodCsrfSafe(method) {
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-
-        /**
-         * @param {string} url
-         * @return {boolean}
-         */
-        function isSameOrigin(url) {
-            var host = document.location.host;
-            var protocol = document.location.protocol;
-            var sr_origin = '//' + host;
-            var origin = protocol + sr_origin;
-
-            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-                // or any other URL that isn't scheme relative or absolute i.e relative.
-                !(/^(\/\/|http:|https:).*/.test(url));
-        }
-
-        /**
-         * @param {string} name
-         * @return {string|null}
-         */
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        var bindOctopusToTarget = function(){
-            $(target).bindOctopus();
-        };
-
-
-        /**
-         * @param {string} data
-         */
-        function insertByMethod(data) {
-            var elem = $($.parseHTML(data)).not('title');
-            elem = $(elem).addClass("octopus-" + insertionMethod);
-
-            $(elem).hide();
-            $(target)[insertionMethod](elem);
-            $(elem).slideDown("fast", bindOctopusToTarget);
-        }
-
-        /**
-         * @param {string} data
-         */
-        function replaceSelf(data) {
-            if ($(sourceElement).hasClass('octopus-link')) {
-                sourceElement = $(sourceElement).parent();
-            }
-            $(sourceElement).fadeOut('fast', function () {
-                this.outerHTML = data;
-                $(this).fadeIn('fast', function () {
-                    $('body').bindOctopus();
-                });
-
-                browserState['target'] = sourceElement;
-            });
-        }
-
-        /**
-         * @param {string} data
-         */
-        function replaceTarget(data) {
-            var elem = $.parseHTML(data);
-            elem = $(elem).addClass("octopus-" + insertionMethod);
-
-            $(target).fadeOut('fast', function () {
-                $(this).html(elem).fadeIn('fast', function () {
-                    $(target).bindOctopus();
-                });
-            });
-        }
-
-        var insertContent = function(data){
-            data = !errorContent ? data : errorContent;
-
-            browserState = {
-                title: title,
-                target: target,
-                container: content
-            };
-
-            switch(insertionMethod){
-                case 'prepend':
-                case 'append':
-                    insertByMethod(data);
-                    break;
-                case 'self':
-                    replaceSelf(data);
-                    break;
-                default:
-                    replaceTarget(data);
-            }
-
-            if (title != "" && title !== undefined){
-                $('title').text(title);
-
-                try{
-                    window.history.pushState(browserState, "", href);
-                }
-                catch(DataCloneError){
-                    browserState = {
-                        title: 'something went wrong, so we pushed everything',
-                        target: 'body',
-                        container: $('body').html()
-                    };
-                    window.history.pushState(browserState, "", href);
-                }
-            }
-
-            $(target).fadeTo(100, 1);
-        };
-
-        this.submit = function() {
-            // Prevent undesirable multiple clicks on a link/element
-            if (href == location.href && $(sourceElement).attr('multi') == "False") {
-                return;
-            }
-
-            var csrftoken = getCookie('csrftoken');
-
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    if (!isMethodCsrfSafe(settings.type) && isSameOrigin(settings.url)) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-
-            $(target).fadeTo(100, .5, function(){
-                $.ajax({
-                    url: href,
-                    type: $(sourceElement).attr('data-oc-method'),
-                    data: requestBody
-                }).done(parseResponseIntoTitleAndContent)
-                    .fail(buildErrorContent)
-                    .always(insertContent);
-            });
-        }
+      switch (insertionMethod) {
+        case 'append':
+          content = oldContent + newContent
+          break
+        case 'prepend':
+          content = newContent + oldContent
+          break
+        case 'replace':
+        default:
+          content = newContent
+      }
     }
 
-    $('.octopus-link').on('click', prepareLinkRequest);
-    $('.octopus-form').on('submit', prepareFormRequest);
+    /**
+     * @param {Object} jqXHR
+     * @param {string} textStatus
+     * @param {string} errorThrown
+     */
+    var buildErrorContent = function (jqXHR, textStatus, errorThrown) {
+      title = content = errorContent = jqXHR.status + ' ' + errorThrown
+    }
 
-    $(window).on('popstate', function(event) {
-        var state = event.originalEvent.state;
+    /**
+     * @param {string} method
+     * @return {boolean}
+     */
+    function isMethodCsrfSafe (method) {
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method))
+    }
 
-        if (state) {
-            $(state.target).html(state.container );
-            $('title').text(state.title);
+    /**
+     * @param {string} url
+     * @return {boolean}
+     */
+    function isSameOrigin (url) {
+      var host = document.location.host
+      var protocol = document.location.protocol
+      var sr_origin = '//' + host
+      var origin = protocol + sr_origin
+
+      return (url == origin || url.slice(0, origin.length + 1) == origin +
+          '/') ||
+          (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin +
+              '/') ||
+          // or any other URL that isn't scheme relative or absolute i.e relative.
+          !(/^(\/\/|http:|https:).*/.test(url))
+    }
+
+    /**
+     * @param {string} name
+     * @return {string|null}
+     */
+    function getCookie (name) {
+      var cookieValue = null
+      if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';')
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = jQuery.trim(cookies[i])
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
+            break
+          }
         }
-        $('body').bindOctopus();
-    });
-});
+      }
+      return cookieValue
+    }
+
+    var bindOctopusToTarget = function () {
+      $(target).bindOctopus()
+    }
+
+    /**
+     * @param {string} data
+     */
+    function insertByMethod (data) {
+      var elem = $($.parseHTML(data)).not('title')
+      elem = $(elem).addClass('octopus-' + insertionMethod)
+
+      $(elem).hide()
+      $(target)[insertionMethod](elem)
+      $(elem).slideDown('fast', bindOctopusToTarget)
+    }
+
+    /**
+     * @param {string} data
+     */
+    function replaceSelf (data) {
+      if ($(sourceElement).hasClass('octopus-link')) {
+        sourceElement = $(sourceElement).parent()
+      }
+      $(sourceElement).fadeOut('fast', function () {
+        this.outerHTML = data
+        $(this).fadeIn('fast', function () {
+          $('body').bindOctopus()
+        })
+
+        browserState['target'] = sourceElement
+      })
+    }
+
+    /**
+     * @param {string} data
+     */
+    function replaceTarget (data) {
+      var elem = $($.parseHTML(data)).not('title')
+
+      elem = $(elem).addClass('octopus-' + insertionMethod)
+
+      $(target).fadeOut('fast', function () {
+        $(this).html(elem).fadeIn('fast', function () {
+          $(target).bindOctopus()
+        })
+      })
+    }
+
+    var insertContent = function (data) {
+      data = !errorContent ? data : errorContent
+
+      browserState = {
+        title: title,
+        target: target,
+        container: content,
+      }
+
+      switch (insertionMethod) {
+        case 'prepend':
+        case 'append':
+          insertByMethod(data)
+          break
+        case 'self':
+          replaceSelf(data)
+          break
+        default:
+          replaceTarget(data)
+      }
+
+      if (title != '' && title !== undefined) {
+        $('title').text(title)
+
+        try {
+          window.history.pushState(browserState, '', href)
+        }
+        catch (DataCloneError) {
+          browserState = {
+            title: 'something went wrong, so we pushed everything',
+            target: 'body',
+            container: $('body').html(),
+          }
+          window.history.pushState(browserState, '', href)
+        }
+      }
+
+      $(target).fadeTo(100, 1)
+    }
+
+    this.submit = function () {
+      // Prevent undesirable multiple clicks on a link/element
+      if (href == location.href && $(sourceElement).attr('multi') == 'False') {
+        return
+      }
+
+      var csrftoken = getCookie('csrftoken')
+
+      $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+          if (!isMethodCsrfSafe(settings.type) && isSameOrigin(settings.url)) {
+            xhr.setRequestHeader('X-CSRFToken', csrftoken)
+          }
+        },
+      })
+
+      $(target).fadeTo(100, .5, function () {
+        $.ajax({
+          url: href,
+          type: $(sourceElement).attr('data-oc-method'),
+          data: requestBody,
+        }).done(parseResponseIntoTitleAndContent)
+            .fail(buildErrorContent)
+            .always(insertContent)
+      })
+    }
+  }
+
+  $('.octopus-link').on('click', prepareLinkRequest)
+  $('.octopus-form').on('submit', prepareFormRequest)
+
+  $(window).on('popstate', function (event) {
+    var state = event.originalEvent.state
+
+    if (state) {
+      $(state.target).html(state.container)
+      $('title').text(state.title)
+    }
+    $('body').bindOctopus()
+  })
+})
