@@ -123,6 +123,7 @@ Bug fixes
 
 * Fixed title insertion and HTML parsin
 * Stopped propagation on clicks
+* Fixed fadeout conflict when insert=self
 
 ## v0.4
 

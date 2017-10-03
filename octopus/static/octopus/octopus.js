@@ -70,7 +70,7 @@ $(function () {
     /**
      * @type {string}
      */
-    var target = sourceElement.getAttribute('data-oc-target')
+    var target = insertionMethod === 'self' ? sourceElement : sourceElement.getAttribute('data-oc-target')
 
     /**
      * @type {string}
@@ -260,7 +260,7 @@ $(function () {
 
     this.submit = function () {
       // Prevent undesirable multiple clicks on a link/element
-      if (href == location.href && $(sourceElement).attr('multi') == 'False') {
+      if (href === location.href && $(sourceElement).attr('data-oc-multi') == 'False') {
         return
       }
 
