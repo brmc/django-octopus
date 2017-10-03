@@ -119,7 +119,12 @@ and other parameters and their default values.
 
 ## v0.4.1
 
-Bug fixes
+
+### New Features
+
+* Added tag to clear certain elements when clicked
+
+### Bug fixes
 
 * Fixed title insertion and HTML parsin
 * Stopped propagation on clicks

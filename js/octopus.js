@@ -7,6 +7,19 @@ $(function () {
     container: $('body').html(),
   }, $('title').text(), window.location.pathname)
 
+  function clearElement (e) {
+    e.stopPropagation()
+    e.preventDefault()
+
+    var target = $(this.getAttribute('data-oc-target'));
+
+    if (!target) {
+      return
+    }
+
+    target.html('')
+  }
+
   /**
    * @param {Event} e
    */
@@ -46,6 +59,9 @@ $(function () {
 
       obj.off('submit', '.octopus-form', prepareFormRequest)
         .on('submit', '.octopus-form', prepareFormRequest)
+
+      obj.off('click', '.octopus-clear', clearElement)
+          .on('click', '.octopus-clear', clearElement)
 
       return this
     },
@@ -287,6 +303,7 @@ $(function () {
 
   $('.octopus-link').on('click', prepareLinkRequest)
   $('.octopus-form').on('submit', prepareFormRequest)
+  $('.octopus-clear').on('click', clearElement)
 
   $(window).on('popstate', function (event) {
     var state = event.originalEvent.state

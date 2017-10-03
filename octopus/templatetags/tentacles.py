@@ -107,3 +107,13 @@ def form(href: str,
     context['form'] = form
 
     return context
+
+
+@register.inclusion_tag('octopus/clear.html')
+def clear(text, target, **kwargs) -> dict:
+    """ Wrapper to create a link that clears another html node
+
+    :returns: dict: context object
+    """
+
+    return create_context(href='/', text=text, target=target, **kwargs)

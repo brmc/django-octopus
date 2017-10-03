@@ -2,6 +2,10 @@
 
 ## v0.4.1
 
+New Features
+
+* Added tag to clear certain elements when clicked
+
 Bug fixes
 
 * Fixed title insertion and HTML parsin
